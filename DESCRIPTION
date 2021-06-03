@@ -1,0 +1,19 @@
+Title: Baby Names
+ShortName: Sample App Poleski
+Date: 2021-05-19
+Lifecycle: experimental
+Authors@R: c(
+    person(given = "Adam", family = "Poleski", email = "axp5697@psu.edu", role = c("aut", "cre")),
+    
+  )
+Chapter: Sample Chapter
+Description: This app is focused on Baby Names.
+LearningObjectives: c(
+    "The student will play around with interactive tools displaying baby names",
+  )
+DisplayMode: Normal
+URL: https://psu-eberly.shinyapps.io/Sample_App
+BugReports: https://github.com/EducationShinyAppTeam/Sample_App/issues
+License: CC-BY-NC-SA-4.0
+Tags: simulation
+Type: Shiny
