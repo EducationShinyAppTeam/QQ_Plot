@@ -38,7 +38,7 @@ ui <- list(
       ),
       tags$div(
         class = "sidebar-logo",
-        boastUtils::psu_eberly_logo("reversed")
+        boastUtils::sidebarFooter()
       )
     ),
     
@@ -47,7 +47,7 @@ ui <- list(
         # First tab content
         tabItem(
           tabName = "intro",
-          h1("Quantile-Quantile plot"),
+          h1("Quantile-Quantile Plot"),
           h4("This application is designed to examine normal Q-Q (Quantile-Quantile) plots. 
           The Q-Q plot, or quantile-quantile plot, is a graphical tool to help us assess
           if a set of data plausibly came from some theoretical distribution such 
@@ -110,10 +110,11 @@ ui <- list(
             br(),
             h4(" QQ Plot Example"),
             p(
-              "Looking at the two plots below, the one on the top would not satisfy
-              the assumption, as many points are deviating from the line.  The plot
-              on the bottom, however, does satisfy the assumption, as most points 
-              are on or very close to the line."
+              "Looking at the two plots below, the one on the left would not satisfy
+              the assumption, as many points are deviating from the line.  
+              In the right plot, the quantiles of the sample values do roughly 
+              line up with the quantiles of the normal distribution, so there 
+              is no apparent violation of the normality assumption."
             )
           ),
 
@@ -121,12 +122,12 @@ ui <- list(
               column(
                 width = 6,
                 offset = 0, 
-                plotOutput("plotleft3")
+                plotOutput("plotnorm3")
               ),
               column(
                 width = 6,
                 offeset = 0, 
-                plotOutput("plotnorm3")
+                plotOutput("plotleft3")
               )
             ),
 
@@ -180,7 +181,7 @@ ui <- list(
               ),
               conditionalPanel(
                 condition = "input.dist=='bimodal'",
-                sliderInput("prop","percent under right mode:",min = 10, 
+                sliderInput("prop","Percent under right mode:",min = 10, 
                             max = 90, value = 50, ticks = F, post = "%")
               ),
               conditionalPanel(
@@ -257,7 +258,23 @@ ui <- list(
             ),
             
             mainPanel(
-              conditionalPanel(
+                conditionalPanel(
+                  condition = "input.dist == 'leftskewed'",
+                  plotOutput('plotleft0')),
+                conditionalPanel(
+                  condition = "input.dist == 'rightskewed'",
+                  plotOutput('plotright1')),
+                conditionalPanel(
+                  condition = "input.dist == 'symmetric'",
+                  plotOutput('plotsymmetric1')),
+                conditionalPanel(
+                  condition = "input.dist == 'bimodal'",
+                  plotOutput('plotbimodal1')),
+                conditionalPanel(
+                  condition = "input.dist == 'normal'",
+                  plotOutput('plotnormal1')),
+                 br(),
+                conditionalPanel(
                 condition = "input.dist == 'leftskewed'", 
                 plotOutput('plotleft2')),
               conditionalPanel(
@@ -273,21 +290,6 @@ ui <- list(
                 condition = "input.dist == 'normal'",
                 plotOutput('plotnormal2')),
               br(),
-              conditionalPanel(
-                condition = "input.dist == 'leftskewed'",
-                plotOutput('plotleft0')),
-              conditionalPanel(
-                condition = "input.dist == 'rightskewed'",
-                plotOutput('plotright1')),
-              conditionalPanel(
-                condition = "input.dist == 'symmetric'",
-                plotOutput('plotsymmetric1')),
-              conditionalPanel(
-                condition = "input.dist == 'bimodal'",
-                plotOutput('plotbimodal1')),
-              conditionalPanel(
-                condition = "input.dist == 'normal'",
-                plotOutput('plotnormal1'))
             )
           )),
         tabItem(
@@ -403,7 +405,7 @@ server <- (function(input, output, session) {
         type = "info",
         title = "Information",
         text = "This app will help you become more familiar with 
-        Quanitile-Quantile plots, as well as their uses and applications."
+        Quanitile-Quantile plots, as well as its uses and applications."
       )
     }
   )
@@ -495,9 +497,7 @@ server <- (function(input, output, session) {
         nrow = input$leftsize,
         ncol = input$leftpath
       ))
-    
-    
-    
+
     output$plotleft1 <- renderPlot({
       curve(dgamma(-x, shape = input$leftskew, beta = 1),
             main = "Population Graph", 
@@ -511,29 +511,30 @@ server <- (function(input, output, session) {
             cex.sub = 1.5,
             xlim = c(input$leftskew - 9*sqrt(input$leftskew), 0))
     })
-   
-     # matrix for prereq graph
-    data12 <- reactive(matrix(-rgamma(n = input$leftpath*1000, 
-                                     input$leftskew, beta = 1), 
-                             nrow = input$leftsize, ncol = input$leftpath))
     
-    #qqplot skewed in prereq
-    output$plotleft3 <- renderPlot({
-      matrix <- data12()
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[5], 
-               line.col = "red", 
-               plot.type = "Q-Q", 
-               qq.line.type = "0-1", 
-               add.line = TRUE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
-               cex.sub = 1.5,
-               main = "Normal Q-Q Plot", 
-               ylab = "Standardized Sample Quantiles")
+    # matrix for prereq graph not skewed
+    data31 <- reactive(matrix(-rgamma(n = 1*100, 
+                                      0.1, beta = 1), 
+                              nrow = input$leftsize, ncol = input$leftpath))
+    
+    # qq plot not skewed in prereq
+    output$plotnorm3 <- renderPlot({
+      matrix <- data31()
+      qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
+             distribution = "norm", 
+             param.list = list(mean = 0, sd = 1), 
+             points.col = boastUtils::boastPalette[5], 
+             line.col = "red", 
+             pch = 16,
+             plot.type = "Q-Q", 
+             qq.line.type = "0-1", 
+             add.line = TRUE, 
+             cex.lab = 1.5, 
+             cex.axis = 1.5, 
+             cex.main = 1.5, 
+             cex.sub = 1.5,
+             main = "Normal Q-Q Plot", 
+             ylab = "Standardized Sample Quantiles")
     })
     
     #qqplot for leftskewed
@@ -545,6 +546,7 @@ server <- (function(input, output, session) {
                param.list = list(mean = 0, sd = 1), 
                points.col = boastUtils::boastPalette[5], 
                line.col = "red", 
+               pch = 16,
                plot.type = "Q-Q", 
                qq.line.type = "0-1", 
                add.line = TRUE, 
@@ -560,7 +562,8 @@ server <- (function(input, output, session) {
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
                points.col = boastUtils::boastPalette[5], 
-               line.col = "red", 
+               line.col = "red",
+               pch = 16,
                plot.type = "Q-Q", 
                qq.line.type = "0-1", 
                add.line = TRUE, 
@@ -574,7 +577,8 @@ server <- (function(input, output, session) {
         qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[4], 
+               points.col = boastUtils::boastPalette[8], 
+               pch = 16,
                plot.type = "Q-Q", 
                yaxt = 'n', 
                xaxt = 'n',
@@ -592,7 +596,9 @@ server <- (function(input, output, session) {
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
                points.col = boastUtils::boastPalette[5], 
-               line.col = "red", plot.type = "Q-Q", 
+               line.col = "red", 
+               pch = 16,
+               plot.type = "Q-Q", 
                qq.line.type = "0-1", 
                add.line = TRUE, 
                cex.lab = 1.5, 
@@ -605,7 +611,8 @@ server <- (function(input, output, session) {
         qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[4], 
+               points.col = boastUtils::boastPalette[8], 
+               pch = 16,
                plot.type = "Q-Q", 
                yaxt = 'n', 
                xaxt = 'n',
@@ -621,7 +628,8 @@ server <- (function(input, output, session) {
         qqPlot((matrix[,3] - mean(matrix[,3]))/sd(matrix[,3]), 
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[3], 
+               points.col = boastUtils::boastPalette[2], 
+               pch = 16,
                plot.type = "Q-Q", 
                yaxt = 'n', 
                xaxt = 'n', 
@@ -673,6 +681,7 @@ server <- (function(input, output, session) {
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
                points.col = boastUtils::boastPalette[5], 
+               pch = 16,
                line.col = "red", 
                plot.type = "Q-Q", 
                qq.line.type = "0-1", 
@@ -689,6 +698,7 @@ server <- (function(input, output, session) {
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
                points.col = boastUtils::boastPalette[5], 
+               pch = 16,
                line.col = "red", 
                plot.type = "Q-Q", 
                qq.line.type = "0-1", 
@@ -703,7 +713,8 @@ server <- (function(input, output, session) {
         qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[4], 
+               points.col = boastUtils::boastPalette[8], 
+               pch = 16,
                plot.type = "Q-Q", 
                yaxt = 'n', 
                xaxt = 'n',
@@ -722,6 +733,7 @@ server <- (function(input, output, session) {
                param.list = list(mean = 0, sd = 1), 
                points.col = boastUtils::boastPalette[5], 
                line.col = "red", 
+               pch = 16,
                plot.type = "Q-Q", 
                qq.line.type = "0-1", 
                add.line = TRUE, 
@@ -735,8 +747,9 @@ server <- (function(input, output, session) {
         qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[4], 
+               points.col = boastUtils::boastPalette[8], 
                plot.type = "Q-Q", 
+               pch = 16,
                yaxt = 'n', 
                xaxt = 'n',
                add.line = FALSE, 
@@ -751,8 +764,9 @@ server <- (function(input, output, session) {
         qqPlot((matrix[,3] - mean(matrix[,3]))/sd(matrix[,3]), 
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[3], 
+               points.col = boastUtils::boastPalette[2], 
                plot.type = "Q-Q", 
+               pch = 16,
                yaxt = 'n', 
                xaxt = 'n', 
                qq.line.type = "0-1",
@@ -806,31 +820,6 @@ server <- (function(input, output, session) {
                              shape1 = input$inverse, shape2 = input$inverse), 
                              nrow = input$symsize, ncol = input$sympath))
     
-    # matrix for prereq values
-    data31 <- reactive(matrix(rbeta(input$sympath*1000, 
-                                   shape1 = input$inverse, shape2 = input$inverse), 
-                             nrow = input$symsize, ncol = input$sympath))
-    
-    # qq plot in prereq symmetric
-    output$plotnorm3 <- renderPlot({
-      matrix <- data31()
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[5], 
-               line.col = "red", 
-               plot.type = "Q-Q", 
-               qq.line.type = "0-1", 
-               add.line = TRUE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
-               cex.sub = 1.5,
-               main = "Normal Q-Q Plot", 
-               ylab = "Standardized Sample Quantiles")
-    })
-    
-    
     # qq plot symmetric
     output$plotsymmetric2 <- renderPlot({
       matrix <- data3()
@@ -840,6 +829,7 @@ server <- (function(input, output, session) {
                param.list = list(mean = 0, sd = 1), 
                points.col = boastUtils::boastPalette[5], 
                line.col = "red", 
+               pch = 16,
                plot.type = "Q-Q", 
                qq.line.type = "0-1", 
                add.line = TRUE, 
@@ -856,6 +846,7 @@ server <- (function(input, output, session) {
                param.list = list(mean = 0, sd = 1), 
                points.col = boastUtils::boastPalette[5], 
                line.col = "red", 
+               pch = 16,
                plot.type = "Q-Q", 
                qq.line.type = "0-1", 
                add.line = TRUE, 
@@ -869,7 +860,8 @@ server <- (function(input, output, session) {
         qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[4],
+               points.col = boastUtils::boastPalette[8],
+               pch = 16,
                plot.type = "Q-Q", 
                yaxt = 'n', 
                xaxt = 'n',
@@ -888,6 +880,7 @@ server <- (function(input, output, session) {
                param.list = list(mean = 0, sd = 1), 
                points.col = boastUtils::boastPalette[5], 
                line.col = "red", 
+               pch = 16,
                plot.type = "Q-Q", 
                qq.line.type = "0-1", 
                add.line = TRUE, 
@@ -901,8 +894,9 @@ server <- (function(input, output, session) {
         qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[4], 
+               points.col = boastUtils::boastPalette[8], 
                plot.type = "Q-Q", 
+               pch = 16,
                yaxt = 'n', 
                xaxt = 'n',
                add.line = FALSE, 
@@ -917,8 +911,9 @@ server <- (function(input, output, session) {
         qqPlot((matrix[,3] - mean(matrix[,3]))/sd(matrix[,3]), 
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[3], 
+               points.col = boastUtils::boastPalette[2], 
                plot.type = "Q-Q", 
+               pch = 16,
                yaxt = 'n', 
                xaxt = 'n', 
                qq.line.type = "0-1",
@@ -1002,7 +997,9 @@ server <- (function(input, output, session) {
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
                points.col = boastUtils::boastPalette[5], 
-               line.col = "red", plot.type = "Q-Q", 
+               line.col = "red", 
+               pch = 16,
+               plot.type = "Q-Q", 
                qq.line.type = "0-1",
                add.line = TRUE, 
                cex.lab = 1.5, 
@@ -1018,6 +1015,7 @@ server <- (function(input, output, session) {
                param.list = list(mean = 0, sd = 1), 
                points.col = boastUtils::boastPalette[5],
                line.col = "red",
+               pch = 16,
                plot.type = "Q-Q", 
                qq.line.type = "0-1",
                add.line = TRUE, 
@@ -1031,8 +1029,9 @@ server <- (function(input, output, session) {
         qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[4],
+               points.col = boastUtils::boastPalette[8],
                plot.type = "Q-Q", 
+               pch = 16,
                yaxt = 'n', 
                xaxt = 'n',
                add.line = FALSE, 
@@ -1049,7 +1048,9 @@ server <- (function(input, output, session) {
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
                points.col = boastUtils::boastPalette[5],
-               line.col = "red", plot.type = "Q-Q", 
+               line.col = "red",
+               pch = 16,
+               plot.type = "Q-Q", 
                qq.line.type = "0-1", add.line = TRUE,
                cex.lab = 1.5,
                cex.axis = 1.5,
@@ -1061,8 +1062,9 @@ server <- (function(input, output, session) {
         qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[4],
-               plot.type = "Q-Q", 
+               points.col = boastUtils::boastPalette[8],
+               plot.type = "Q-Q",
+               pch = 16,
                yaxt = 'n', 
                xaxt = 'n',
                add.line = FALSE,
@@ -1077,8 +1079,9 @@ server <- (function(input, output, session) {
         qqPlot((matrix[,3] - mean(matrix[,3]))/sd(matrix[,3]),
                distribution = "norm",
                param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[3],
+               points.col = boastUtils::boastPalette[2],
                plot.type = "Q-Q", 
+               pch = 16,
                yaxt = 'n',
                xaxt = 'n',
                qq.line.type = "0-1",
@@ -1117,6 +1120,26 @@ server <- (function(input, output, session) {
                              nrow = input$normsize, 
                              ncol = input$normpath))
     
+    #qqplot skewed in prereq
+    output$plotleft3 <- renderPlot({
+      matrix <- data5()
+      qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
+             distribution = "norm", 
+             param.list = list(mean = 0, sd = 1), 
+             points.col = boastUtils::boastPalette[5], 
+             line.col = "red", 
+             pch = 16,
+             plot.type = "Q-Q", 
+             qq.line.type = "0-1", 
+             add.line = TRUE, 
+             cex.lab = 1.5, 
+             cex.axis = 1.5, 
+             cex.main = 1.5, 
+             cex.sub = 1.5,
+             main = "Normal Q-Q Plot", 
+             ylab = "Standardized Sample Quantiles")
+    })
+    
     #qqplot for normal
     output$plotnormal2 <- renderPlot({
       matrix <- data5()
@@ -1126,6 +1149,7 @@ server <- (function(input, output, session) {
                param.list = list(mean = 0, sd = 1), 
                points.col = boastUtils::boastPalette[5], 
                line.col = "red",
+               pch = 16,
                plot.type = "Q-Q", 
                qq.line.type = "0-1",
                add.line = TRUE, 
@@ -1142,6 +1166,7 @@ server <- (function(input, output, session) {
                param.list = list(mean = 0, sd = 1), 
                points.col = boastUtils::boastPalette[5],
                line.col = "red", 
+               pch = 16,
                plot.type = "Q-Q", 
                qq.line.type = "0-1",
                add.line = TRUE, 
@@ -1155,8 +1180,9 @@ server <- (function(input, output, session) {
         qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[4], 
+               points.col = boastUtils::boastPalette[8], 
                plot.type = "Q-Q", 
+               pch = 16,
                yaxt = 'n', xaxt = 'n',
                add.line = FALSE, 
                cex.lab = 1.5, 
@@ -1173,6 +1199,7 @@ server <- (function(input, output, session) {
                param.list = list(mean = 0, sd = 1), 
                points.col = boastUtils::boastPalette[5],
                line.col = "red",
+               pch = 16,
                plot.type = "Q-Q", 
                qq.line.type = "0-1",
                add.line = TRUE, 
@@ -1186,8 +1213,9 @@ server <- (function(input, output, session) {
         qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[4],
+               points.col = boastUtils::boastPalette[8],
                plot.type = "Q-Q", 
+               pch = 16,
                yaxt = 'n', 
                xaxt = 'n',
                add.line = FALSE, 
@@ -1202,7 +1230,8 @@ server <- (function(input, output, session) {
         qqPlot((matrix[,3] - mean(matrix[,3]))/sd(matrix[,3]), 
                distribution = "norm", 
                param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[3], 
+               points.col = boastUtils::boastPalette[2], 
+               pch = 16,
                plot.type = "Q-Q", 
                yaxt = 'n', 
                xaxt = 'n',
