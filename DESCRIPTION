@@ -6,14 +6,15 @@ Authors@R: c(
     person(given = "Adam", family = "Poleski", email = "axp5697@psu.edu", role = c("aut", "cre")),
     
   )
-Chapter: Sample Chapter
-Description: This app is focused on Baby Names.
+Chapter: Linear Regression
+Description: This app shows the uses of QQ plots, as well as an interactive tool to display how different distributions affect the plots.
 LearningObjectives: c(
-    "The student will play around with interactive tools displaying baby names",
+    "The student will first learn about the background of QQ Plots and what they are used for.  From there, they will be able to play 
+    around with interactive QQ Plots to see how various things affect them (sample size, skewness, number of paths.)",
   )
 DisplayMode: Normal
-URL: https://psu-eberly.shinyapps.io/Sample_App
-BugReports: https://github.com/EducationShinyAppTeam/Sample_App/issues
+URL: https://psu-eberly.shinyapps.io/QQ_Plot
+BugReports: https://github.com/EducationShinyAppTeam/QQ_Plot/issues
 License: CC-BY-NC-SA-4.0
 Tags: simulation
 Type: Shiny
