@@ -48,7 +48,7 @@ ui <- list(
         tabItem(
           tabName = "intro",
           h1("Quantile-Quantile Plot"),
-          h4("This application is designed to examine normal Q-Q (Quantile-Quantile) plots. 
+          p("This application is designed to examine normal Q-Q (Quantile-Quantile) plots. 
           The Q-Q plot, or quantile-quantile plot, is a graphical tool to help us assess
           if a set of data plausibly came from some theoretical distribution such 
           as a Normal in use for this app."),
@@ -78,7 +78,7 @@ ui <- list(
           ),
           br(),
           h3(strong("Acknowledgements")),
-          h4("This app was developed and coded by Jiajun Gao and modified by Adam Poleski in 2021.")
+          p("This app was developed and coded by Jiajun Gao and modified by Adam Poleski in 2021.")
         ),
         
         # Set up prereq page
