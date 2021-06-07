@@ -70,7 +70,7 @@ ui <- list(
             style = "text-align: center" ,
             bsButton(
               inputId = "start", 
-              label = "Go to Prerequisites", 
+              label = "Prerequisites", 
               size = "large", 
               icon = icon("bolt"),
               style = "default"
@@ -137,7 +137,7 @@ ui <- list(
              style = "text-align: center" ,
              bsButton(
              inputId = "start1", 
-             label = "Go to Explore", 
+             label = "Explore!", 
              size = "large", 
              icon = icon("bolt"),
              style = "default"
@@ -304,14 +304,19 @@ ui <- list(
           ),
           p(
             class = "hangingindent",
+            "Boos DD and Nychka D (2012). Rlab: Functions and Datasets 
+          Required for ST370 class. R package version 2.15.1"
+          ),
+          p(
+            class = "hangingindent",
             "Carey, R. and Hatfield, N. (2020), boastUtils: BOAST Utilities. 
           (v. 0.1.10.2), [R package] Available from 
           https://github.com/EducationShinyAppTeam/boastUtils"
           ),
           p(
             class = "hangingindent",
-            "Lemon, J. (2006). plotrix: a package in
-          the red light district of R R-News, 6(4), 8-12"
+            "Chang W and Borges Ribeiro B (2017). 
+          shinydashboard: Create Dashboards with ‘Shiny’. R package version 0.6.1"
           ),
           p(
             class = "hangingindent",
@@ -320,8 +325,34 @@ ui <- list(
           ),
           p(
             class = "hangingindent",
-            "Chang W and Borges Ribeiro B (2017). 
-          shinydashboard: Create Dashboards with ‘Shiny’. R package version 0.6.1"
+            "Hadley Wickham (2016). scales: Scale Functions for Visualization. 
+          R package version 0.4.1"
+          ),
+          p(
+            class = "hangingindent",
+            "Heike Trautmann and Detlef Steuer and Olaf Mersmann and Björn 
+          Bornkamp (2014). truncnorm: Truncated normal distribution R 
+          version 1.0-7"
+          ),
+          p(
+            class = "hangingindent",
+            "Kun Ren and Kenton Russell (2016). formattable: Create 
+          ‘Formattable’ Data Structures. R package version 0.2.0.1."
+          ),
+          p(
+            class = "hangingindent",
+            "Lemon, J. (2006). plotrix: a package in
+          the red light district of R R-News, 6(4), 8-12"
+          ),
+          p(
+            class = "hangingindent",
+            "Millard Sp (2013). EnvStats: An R package for Environmental 
+          Statistics. Springer, New York. ISBN 978-1-4614-8455-4."
+          ),
+          p(
+            class = "hangingindent",
+            "R Core Team (2018). stats: A language and environment for statistical 
+          computing. R Foundation for Statistical Computing, Vienna, Austria."
           ),
           p(
             class = "hangingindent",
@@ -332,37 +363,6 @@ ui <- list(
             class = "hangingindent",
             "Wickham H (2007). reshape2: Reshaping Data with 
           the reshape package. Journal of Statistical Software, 21(12), 1-20"
-          ),
-          p(
-            class = "hangingindent",
-            "Hadley Wickham (2016). scales: Scale Functions for Visualization. 
-          R package version 0.4.1"
-          ),
-          p(
-            class = "hangingindent",
-            "R Core Team (2018). stats: A language and environment for statistical 
-          computing. R Foundation for Statistical Computing, Vienna, Austria."
-          ),
-          p(
-            class = "hangingindent",
-            "Boos DD and Nychka D (2012). Rlab: Functions and Datasets 
-          Required for ST370 class. R package version 2.15.1"
-          ),
-          p(
-            class = "hangingindent",
-            "Kun Ren and Kenton Russell (2016). formattable: Create 
-          ‘Formattable’ Data Structures. R package version 0.2.0.1."
-          ),
-          p(
-            class = "hangingindent",
-            "Heike Trautmann and Detlef Steuer and Olaf Mersmann and Björn 
-          Bornkamp (2014). truncnorm: Truncated normal distribution R 
-          version 1.0-7"
-          ),
-          p(
-            class = "hangingindent",
-            "Millard Sp (2013). EnvStats: An R package for Environmental 
-          Statistics. Springer, New York. ISBN 978-1-4614-8455-4."
           ),
           boastUtils::copyrightInfo()
           
