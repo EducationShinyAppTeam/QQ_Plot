@@ -72,7 +72,7 @@ ui <- list(
               inputId = "start", 
               label = "Prerequisites", 
               size = "large", 
-              icon = icon("bolt"),
+              icon = icon("book"),
               style = "default"
               )
           ),
@@ -153,7 +153,7 @@ ui <- list(
           
           sidebarLayout(
             sidebarPanel(
-              selectInput("dist", "population Type",
+              selectInput("dist", "Population type",
                           list( 
                             "Left-skewed" = "leftskewed",
                             "Right-skewed" = "rightskewed",
