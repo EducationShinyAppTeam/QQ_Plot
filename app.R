@@ -62,9 +62,6 @@ ui <- list(
           population is shown on the right."),
           tags$li("Move the slider to explore how sample size affects the normal 
           q-q plot and see how this varies from sample to sample using the Number of paths slider."),
-          tags$li("Click 'GO!' to start."),
-          h4(""),
-          tags$li("play with it and have fun!"),
           ),
           div(
             style = "text-align: center" ,
