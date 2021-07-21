@@ -1,17 +1,11 @@
 library(shiny)
 library(shinydashboard)
 library(shinyBS)
-library(plotrix)
 library(boastUtils)
 library(plotrix)
 library(ggplot2)
-library(reshape2)
-library(scales)
 library(stats)
 library(Rlab)
-library(dplyr)
-library(formattable)
-library(truncnorm)
 library(EnvStats)
 library(shinyWidgets)
 library("shinydashboard", lib.loc = "/usr/lib64/R/library")
@@ -28,7 +22,7 @@ ui <- list(
       tags$li(class = "dropdown", 
               boastUtils::surveyLink(name = "QQ_plot")),
       tags$li(class = "dropdown", tags$a(href = 'https://shinyapps.science.psu.edu/', icon("home")))),
-    dashboardSidebar(
+    dashboardSidebar( width = 250,
       sidebarMenu(
         id = "pages",
         menuItem("Overview", tabName = "intro", icon = icon("dashboard")),
@@ -53,18 +47,20 @@ ui <- list(
           if a set of data plausibly came from some theoretical distribution such 
           as a Normal in use for this app."),
           br(),
+          h3("Instructions"),
           tags$ul(
-          h3(strong("Instructions")),
-          tags$li("There are five population types: left-skewed, right-skewed, symmetric, bimodel and normal."),
+          tags$li("There are five population types: left-skewed, right-skewed, 
+                  symmetric, bimodel and normal."),
           tags$li("For each population type, you can change the corresponding
           parameters and change the population density as shown in the population graph."),
           tags$li("A quantile-quantile plot for a random sample from the 
           population is shown on the right."),
           tags$li("Move the slider to explore how sample size affects the normal 
-          q-q plot and see how this varies from sample to sample using the Number of paths slider."),
+          q-q plot and see how this varies from sample to sample using the 
+          number of paths slider."),
           ),
           div(
-            style = "text-align: center" ,
+            style = "text-align: center;" ,
             bsButton(
               inputId = "start", 
               label = "Prerequisites", 
@@ -74,7 +70,7 @@ ui <- list(
               )
           ),
           br(),
-          h3(strong("Acknowledgements")),
+          h3("Acknowledgements"),
           p("This app was developed and coded by Jiajun Gao and modified by Adam Poleski in 2021.")
         ),
         
@@ -101,10 +97,6 @@ ui <- list(
               there is no evidence that the assumption is violated.
 "
             ),
-            br(),
-            br(),
-            br(),
-            br(),
             h4(" QQ Plot Example"),
             p(
               "Looking at the two plots below, the one on the left would not satisfy
@@ -161,6 +153,11 @@ ui <- list(
               ),
               br(),
               br(),
+              checkboxInput(
+                inputId = "standardOrNo",
+                label = "Show standardized values",
+                value = TRUE,
+                width = NULL),
               conditionalPanel(
                 condition = "input.dist == 'leftskewed'",
                 sliderInput("leftskew", " Skewness:",min = 0, max = 1, value = .5, step = 0.01,
@@ -361,6 +358,9 @@ ui <- list(
             "Wickham H (2007). reshape2: Reshaping Data with 
           the reshape package. Journal of Statistical Software, 21(12), 1-20"
           ),
+          br(),
+          br(),
+          br(),
           boastUtils::copyrightInfo()
           
         )
