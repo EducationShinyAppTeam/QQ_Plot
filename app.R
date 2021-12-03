@@ -1,31 +1,63 @@
+# Load packages ----
 library(shiny)
 library(shinydashboard)
 library(shinyBS)
 library(boastUtils)
-library(plotrix)
 library(ggplot2)
-library(stats)
 library(Rlab)
 library(EnvStats)
 library(shinyWidgets)
-library("shinydashboard", lib.loc = "/usr/lib64/R/library")
+
+# Define common functions ----
+# create density plot function
+makeDensityPlot <- function(data, xlims, path = 0) {
+  plot <- ggplot(aes(x = x, y = y), data = data) +
+    geom_path(color = "#0072B2", size = 1.5) +
+    xlim(xlims) +
+    xlab("Value") +
+    ylab("Density") +
+    ggtitle("Population Graph") +
+    theme(
+      axis.text = element_text(size = 18),
+      plot.title = element_text(size = 18, face = "bold"),
+      axis.title = element_text(size = 18),
+      panel.background = element_rect(fill = "white", color = "black")
+    )
+  # For case in symmetric where path is 1 causing "box" shape
+  if (path == 1) {
+    plot <- plot +
+      geom_segment(aes(x = 0, y = 0, xend = 0, yend = 1), color = "#0072B2", size = 1.5) +
+      geom_segment(aes(x = 1, y = 0, xend = 1, yend = 1), color = "#0072B2", size = 1.5)
+  }
+  return(plot)
+}
+
+# Create example data sets ----
+skewedData <- -1 * rgamma(n = 75, shape = 0.1, scale = 1)
+normalData <- rnorm(n = 75, mean = 0, sd = 1)
 
 
-
+# Create UI ----
 ui <- list(
   dashboardPage(
     skin = "black",
+    ## Header ----
     dashboardHeader(
-      title = "QQ Plot",
+      title = "QQ Plots",
       titleWidth = 250,
       tags$li(class = "dropdown", actionLink("info", icon("info"))),
       tags$li(class = "dropdown", 
               boastUtils::surveyLink(name = "QQ_plot")),
-      tags$li(class = "dropdown", tags$a(href = 'https://shinyapps.science.psu.edu/', icon("home")))),
-    dashboardSidebar( width = 250,
+      tags$li(class = "dropdown",
+              tags$a(href = 'https://shinyapps.science.psu.edu/', icon("home"))
+      )
+    ),
+    ## Sidebar ----
+    dashboardSidebar(
+      width = 250,
       sidebarMenu(
         id = "pages",
-        menuItem("Overview", tabName = "intro", icon = icon("dashboard")),
+        menuItem("Overview", tabName = "intro", icon = icon("tachometer-alt")),
         menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
         menuItem("Explore", tabName = "qqplots", icon = icon("wpexplorer")),
         menuItem("References", tabName = "references", icon = icon("leanpub"))
@@ -35,29 +67,33 @@ ui <- list(
         boastUtils::sidebarFooter()
       )
     ),
-    
+    ## Body ----
     dashboardBody(
       tabItems(
         # First tab content
         tabItem(
+          ### Overview ----
           tabName = "intro",
-          h1("Quantile-Quantile Plot"),
-          p("This application is designed to examine normal Q-Q (Quantile-Quantile) plots. 
-          The Q-Q plot, or quantile-quantile plot, is a graphical tool to help us assess
-          if a set of data plausibly came from some theoretical distribution such 
-          as a Normal in use for this app."),
+          h1("Quantile-Quantile Plots"),
+          p("This application is designed to examine Q-Q (Quantile-Quantile)
+            plots. The Q-Q plot, or quantile-quantile plot, is a graphical tool 
+            to help us assess if a set of data plausibly came from some 
+            theoretical distribution such as a normal (Gaussian) distribution."),
           br(),
-          h3("Instructions"),
+          h2("Instructions"),
           tags$ul(
-          tags$li("There are five population types: left-skewed, right-skewed, 
-                  symmetric, bimodel and normal."),
-          tags$li("For each population type, you can change the corresponding
-          parameters and change the population density as shown in the population graph."),
-          tags$li("A quantile-quantile plot for a random sample from the 
-          population is shown on the right."),
-          tags$li("Move the slider to explore how sample size affects the normal 
-          q-q plot and see how this varies from sample to sample using the 
-          number of paths slider."),
+            tags$li("There are five types of population types you can choose: left-skewed, right-skewed, 
+                  symmetric, bimodel, and normal (Gaussian)."),
+            tags$li("For each type of population, you can change the values of
+                    corresponding parameters to change the population density as
+                    shown in the population graph."),
+            tags$li("A quantile-quantile (Q-Q) plot for a random sample from the
+                    population is shown to the lower right, showing how the sample
+                    compares to a particular theoretical normal (Gaussian) 
+                    distribution."),
+            tags$li("Move the slider to explore how sample size affects the normal 
+                    Q-Q plot and see how this varies from sample to sample using
+                    the number of paths slider.")
           ),
           div(
             style = "text-align: center;" ,
@@ -67,208 +103,224 @@ ui <- list(
               size = "large", 
               icon = icon("book"),
               style = "default"
-              )
+            )
           ),
           br(),
           h3("Acknowledgements"),
-          p("This app was developed and coded by Jiajun Gao and modified by Adam Poleski in 2021.")
+          p("This app was developed and coded by Jiajun Gao and modified by
+            Adam Poleski in 2021.",
+            br(),
+            br(),
+            "Cite this app as:",
+            br(),
+            boastUtils::citeApp(),
+            br(),
+            br(),
+            div(class = "updated", "Last Update: 12/3/2021 by NJH")
+          )
         ),
-        
-        # Set up prereq page
+        ### Prereq page ----
         tabItem(
           tabName = "prerequisites",
           withMathJax(),
           h2("Prerequisites"),
           p("In order to fully understand this app and the purpose of a 
-            Quantile-Quantile plot, review this information 
-            before heading to the explore page."),
+            Quantile-Quantile (Q-Q) plot, review this information before heading
+            to the explore page."),
           tags$ul(
-            tags$li(
-              "A Quantile-Quantile Plot will graph the quantiles of one 
-              distribution against another."
-            ),
-            tags$li(
-              "This plot is commonly used in regression diagnostics to 
-              check if the residuals follow a normal distribution, which 
-              is a common assumption for inference."
-              ),
-              tags$li(
-              "If the points on the plot are close to a diagonal line, 
-              there is no evidence that the assumption is violated.
-"
-            ),
-            h4(" QQ Plot Example"),
-            p(
-              "Looking at the two plots below, the one on the left would not satisfy
-              the assumption, as many points are deviating from the line.  
-              In the right plot, the quantiles of the sample values do roughly 
-              line up with the quantiles of the normal distribution, so there 
-              is no apparent violation of the normality assumption."
-            )
+            tags$li("A Quantile-Quantile Plot (Q-Q plot) displays the quantiles 
+                    of one distribution against the quantiles of another."),
+            tags$li("Typically, we use the empirical quantiles from a data sample
+                    (often standardized) on one axis (here we've used the 
+                    vertical axis). For the other axis, we use the theoretical
+                    quantiles from particular named distribution such as the 
+                    Standard Normal"),
+            tags$li("The Q-Q plot is commonly used in regression (and modeling)
+                    diagnostics to check if the residuals follow a normal (Gaussian)
+                    distribution, which is a common assumption for inference."),
+            tags$li("Many times a diagnonal line going from the lower left to 
+                    the upper right appears in the Q-Q plot. This reference line
+                    indicates perfect matching between the quantiles of the two
+                    distributions."),
+            tags$li("If the points on the plot are close to a diagonal line, 
+                    there is no evidence that the assumption is violated. As more
+                    and more points depart from this line, the more we can doubt
+                    that the two distributions are consistent with each other.")
           ),
-
-            fluidRow(
-              column(
-                width = 6,
-                offset = 0, 
-                plotOutput("plotnorm3")
-              ),
-              column(
-                width = 6,
-                offeset = 0, 
-                plotOutput("plotleft3")
-              )
+          h3(" QQ Plot Example"),
+          p("Looking at the two plots below, the plot on the left would not
+              satisfy the regression assumption as many points are deviating from
+              the referenc line. In the right plot, the quantiles of the sample
+              values do roughly line up with the quantiles of the normal 
+              distribution, so there is no apparent violation of the normality
+              assumption."
+          ),
+          fluidRow(
+            column(
+              width = 6,
+              offset = 0, 
+              plotOutput("skewExamplePlot")
             ),
-
-            
-
-            div(
-             style = "text-align: center" ,
-             bsButton(
-             inputId = "start1", 
-             label = "Explore!", 
-             size = "large", 
-             icon = icon("bolt"),
-             style = "default"
-  )
-),
-          
+            column(
+              width = 6,
+              offeset = 0, 
+              plotOutput("goodExamplePlot")
+              )
+          ),
+          div(
+            style = "text-align: center;" ,
+            bsButton(
+              inputId = "start1", 
+              label = "Explore!", 
+              size = "large", 
+              icon = icon("bolt"),
+              style = "default"
+            )
+          )
         ),
-        
-        
-        #third tab item
+        ### Explore page ----
         tabItem(
           tabName = "qqplots",
-          
-          sidebarLayout(
-            sidebarPanel(
-              selectInput("dist", "Population type",
-                          list( 
-                            "Left-skewed" = "leftskewed",
-                            "Right-skewed" = "rightskewed",
-                            "Symmetric" = "symmetric",
-                            "Bimodal" = "bimodal",
-                            "Normal" = "normal"), 
-                          selected = "leftskewed"
-              ),
-              br(),
-              br(),
-              checkboxInput(
-                inputId = "standardOrNo",
-                label = "Show standardized values",
-                value = TRUE,
-                width = NULL),
-              conditionalPanel(
-                condition = "input.dist == 'leftskewed'",
-                sliderInput("leftskew", " Skewness:",min = 0, max = 1, value = .5, step = 0.01,
-                            ticks = F)
-              ),
-              conditionalPanel(
-                condition = "input.dist=='rightskewed'",
-                sliderInput("rightskew", "Skewness:",min = 0, max = 1, value = .5, step = 0.01,
-                            ticks = F)
-              ), 
-              conditionalPanel(
-                condition = "input.dist=='symmetric'",
-                sliderInput("inverse","Peakedness:", min = 0, max = 1, value = .5, step = 0.01,
-                            ticks = F)
-              ),
-              conditionalPanel(
-                condition = "input.dist=='bimodal'",
-                sliderInput("prop","Percent under right mode:",min = 10, 
-                            max = 90, value = 50, ticks = F, post = "%")
-              ),
-              conditionalPanel(
-                condition = "input.dist == 'normal'",
-                sliderInput("normmean", "Mean:", min = -5, max = 5, value = 0, step = 0.1,
-                            ticks = F),
-                sliderInput("normsd", "Standard Deviation:", min = 1, max = 5, value = 1, step = 0.1, 
-                            ticks = F)
-              ),
-              conditionalPanel(
-                condition = "input.dist == 'leftskewed'", 
-                sliderInput("leftpath", "Number of paths",
-                            min = 1,
-                            max = 3,
-                            value = 1),
-                sliderInput("leftsize", "Sample size (n)",
-                            min = 10,
-                            max = 500,
-                            value = 100)
-              ),
-              conditionalPanel(
-                condition = "input.dist == 'rightskewed'", 
-                # choose the number of sample means
-                sliderInput("rightpath", "Number of paths",
-                            min = 1,
-                            max = 3,
-                            value = 1),
-                # choose the number of sample means
-                sliderInput("rightsize", "Sample size (n)",
-                            min = 10,
-                            max = 500,
-                            value = 100)
-              ),
-              
-              conditionalPanel(
-                condition = "input.dist == 'symmetric'",
-                #choose the number of sample means
-                sliderInput("sympath", "Number of paths",
-                            min = 1,
-                            max = 3,
-                            value = 1),
-                #choose the number of sample means
-                sliderInput("symsize", "Sample size (n)",
-                            min = 10,
-                            max = 500,
-                            value = 100)
-              ),
-              conditionalPanel(
-                condition = "input.dist == 'bimodal'",
-                #choose the number of sample means
-                sliderInput("bipath", "Number of paths",
-                            min = 1,
-                            max = 3,
-                            value = 1),
-                #choose the number of sample means
-                sliderInput("bisize", " Sample size (n)",
-                            min = 10,
-                            max = 500,
-                            value = 100)
-              ),
-              conditionalPanel(
-                condition = "input.dist == 'normal'",
-                #choose the number of sample means
-                sliderInput("normpath", "Number of paths",
-                            min = 1,
-                            max = 3,
-                            value = 1),
-                #choose the number of sample means
-                sliderInput("normsize", " Sample size (n)",
-                            min = 10,
-                            max = 500,
-                            value = 100)
-              )
-            ),
-            
-            mainPanel(
+          h2("Explore Q-Q Plots"),
+          p("Use the controls on the left to explore Q-Q plots for different 
+            types of populations and different sample sizes."),
+          fluidRow(
+            column(
+              width = 4,
+              offset = 0,
+              wellPanel(
+                selectInput(
+                  inputId = "dist",
+                  label = "Population type",
+                  choices = list( 
+                    "Left-skewed" = "leftskewed",
+                    "Right-skewed" = "rightskewed",
+                    "Symmetric" = "symmetric",
+                    "Bimodal" = "bimodal",
+                    "Normal" = "normal"
+                  ), 
+                  selected = "leftskewed"
+                ),
+                checkboxInput(
+                  inputId = "standardOrNo",
+                  label = "Show standardized values",
+                  value = TRUE,
+                  width = NULL
+                ),
                 conditionalPanel(
                   condition = "input.dist == 'leftskewed'",
-                  plotOutput('plotleft0')),
+                  sliderInput("leftskew", " Skewness:",min = 0, max = 1, value = .5, step = 0.01,
+                              ticks = F)
+                ),
                 conditionalPanel(
-                  condition = "input.dist == 'rightskewed'",
-                  plotOutput('plotright1')),
+                  condition = "input.dist=='rightskewed'",
+                  sliderInput("rightskew", "Skewness:",min = 0, max = 1, value = .5, step = 0.01,
+                              ticks = F)
+                ), 
                 conditionalPanel(
-                  condition = "input.dist == 'symmetric'",
-                  plotOutput('plotsymmetric1')),
+                  condition = "input.dist=='symmetric'",
+                  sliderInput("inverse","Peakedness:", min = 0, max = 1, value = .5, step = 0.01,
+                              ticks = F)
+                ),
                 conditionalPanel(
-                  condition = "input.dist == 'bimodal'",
-                  plotOutput('plotbimodal1')),
+                  condition = "input.dist=='bimodal'",
+                  sliderInput("prop","Percent under right mode:",min = 10, 
+                              max = 90, value = 50, ticks = F, post = "%")
+                ),
                 conditionalPanel(
                   condition = "input.dist == 'normal'",
-                  plotOutput('plotnormal1')),
-                 br(),
+                  sliderInput("normmean", "Mean:", min = -5, max = 5, value = 0, step = 0.1,
+                              ticks = F),
+                  sliderInput("normsd", "Standard Deviation:", min = 1, max = 5, value = 1, step = 0.1, 
+                              ticks = F)
+                ),
                 conditionalPanel(
+                  condition = "input.dist == 'leftskewed'", 
+                  sliderInput("leftpath", "Number of paths",
+                              min = 1,
+                              max = 3,
+                              value = 1),
+                  sliderInput("leftsize", "Sample size (n)",
+                              min = 10,
+                              max = 500,
+                              value = 100)
+                ),
+                conditionalPanel(
+                  condition = "input.dist == 'rightskewed'", 
+                  # choose the number of sample means
+                  sliderInput("rightpath", "Number of paths",
+                              min = 1,
+                              max = 3,
+                              value = 1),
+                  # choose the number of sample means
+                  sliderInput("rightsize", "Sample size (n)",
+                              min = 10,
+                              max = 500,
+                              value = 100)
+                ),
+                
+                conditionalPanel(
+                  condition = "input.dist == 'symmetric'",
+                  #choose the number of sample means
+                  sliderInput("sympath", "Number of paths",
+                              min = 1,
+                              max = 3,
+                              value = 1),
+                  #choose the number of sample means
+                  sliderInput("symsize", "Sample size (n)",
+                              min = 10,
+                              max = 500,
+                              value = 100)
+                ),
+                conditionalPanel(
+                  condition = "input.dist == 'bimodal'",
+                  #choose the number of sample means
+                  sliderInput("bipath", "Number of paths",
+                              min = 1,
+                              max = 3,
+                              value = 1),
+                  #choose the number of sample means
+                  sliderInput("bisize", " Sample size (n)",
+                              min = 10,
+                              max = 500,
+                              value = 100)
+                ),
+                conditionalPanel(
+                  condition = "input.dist == 'normal'",
+                  #choose the number of sample means
+                  sliderInput("normpath", "Number of paths",
+                              min = 1,
+                              max = 3,
+                              value = 1),
+                  #choose the number of sample means
+                  sliderInput("normsize", " Sample size (n)",
+                              min = 10,
+                              max = 500,
+                              value = 100)
+                )
+              )
+            ),
+            column(
+              width = 8,
+              offset = 0,
+              #### Population Graphs ----
+              conditionalPanel(
+                condition = "input.dist == 'leftskewed'",
+                plotOutput('plotleft0')),
+              conditionalPanel(
+                condition = "input.dist == 'rightskewed'",
+                plotOutput('plotright1')),
+              conditionalPanel(
+                condition = "input.dist == 'symmetric'",
+                plotOutput('plotsymmetric1')),
+              conditionalPanel(
+                condition = "input.dist == 'bimodal'",
+                plotOutput('plotbimodal1')),
+              conditionalPanel(
+                condition = "input.dist == 'normal'",
+                plotOutput('plotnormal1')),
+              #### QQ Plots ----
+              conditionalPanel(
                 condition = "input.dist == 'leftskewed'", 
                 plotOutput('plotleft2')),
               conditionalPanel(
@@ -283,9 +335,10 @@ ui <- list(
               conditionalPanel(
                 condition = "input.dist == 'normal'",
                 plotOutput('plotnormal2')),
-              br(),
             )
-          )),
+          )
+        ),
+        ### References page ----
         tabItem(
           tabName = "references",
           withMathJax(),
@@ -293,107 +346,87 @@ ui <- list(
           p(
             class = "hangingindent",
             "Bailey, E. (2015), shinyBS: Twitter bootstrap components for shiny.
-          (v0.61). [R package]. Available from
-          https://CRAN.R-project.org/package=shinyBS"
+            (v0.61). [R package]. Available from
+            https://CRAN.R-project.org/package=shinyBS"
           ),
           p(
             class = "hangingindent",
-            "Boos DD and Nychka D (2012). Rlab: Functions and Datasets 
-          Required for ST370 class. R package version 2.15.1"
+            "Boos, D. D., and Nychka, D. (2012). Rlab: Functions and datasets 
+            required for ST370 class. (v. 2.15.1) [R package]. Available from
+            https://CRAN.R-project.org/package=Rlab"
           ),
           p(
             class = "hangingindent",
-            "Carey, R. and Hatfield, N. (2020), boastUtils: BOAST Utilities. 
-          (v. 0.1.10.2), [R package] Available from 
-          https://github.com/EducationShinyAppTeam/boastUtils"
+            "Carey, R. and Hatfield, N. (2021), boastUtils: BOAST Utilities.
+            (v. 0.1.11.1), [R package]. Available from 
+            https://github.com/EducationShinyAppTeam/boastUtils"
           ),
           p(
             class = "hangingindent",
-            "Chang W and Borges Ribeiro B (2017). 
-          shinydashboard: Create Dashboards with ‘Shiny’. R package version 0.6.1"
+            "Chang, W. and Borges Ribeiro, B. (2021). shinydashboard: Create 
+            dashboards with ‘Shiny’. (v. 0.7.2) [R package]. Available from
+            https://CRAN.R-project.org/package=shinydashboard"
           ),
           p(
             class = "hangingindent",
-            "Chang W, Cheng J, Allaire J, Xie Y and Mcpherson J (2017). 
-          shiny: Web Application Framework for R. R package version 1.0.3"
+            "Chang, W., Cheng, J., Allaire, J., Sievert, C., Schloerke, B., Xie, Y.,
+            Allen, J., McPherson, J., Dipert, A., and Borges, B. (2021). shiny:
+            Web application framework for R. (v. 1.7.1) [R package]. Available
+            from https://CRAN.R-project.org/package=shiny"
           ),
           p(
             class = "hangingindent",
-            "Hadley Wickham (2016). scales: Scale Functions for Visualization. 
-          R package version 0.4.1"
+            "Millard, S. P. (2013). EnvStats: An R package for environmental 
+            statistics. Springer, New York. ISBN 978-1-4614-8455-4."
           ),
           p(
             class = "hangingindent",
-            "Heike Trautmann and Detlef Steuer and Olaf Mersmann and Björn 
-          Bornkamp (2014). truncnorm: Truncated normal distribution R 
-          version 1.0-7"
+            "Perrier, V., Meyer, F., and Granjon, D. (2021). shinyWidgets: Custom
+            inputs widgets for shiny (v. 0.6.2). [R package]. Available from
+            https://CRAN.R-project.org/package=shinyWidgets"
           ),
           p(
             class = "hangingindent",
-            "Kun Ren and Kenton Russell (2016). formattable: Create 
-          ‘Formattable’ Data Structures. R package version 0.2.0.1."
-          ),
-          p(
-            class = "hangingindent",
-            "Lemon, J. (2006). plotrix: a package in
-          the red light district of R R-News, 6(4), 8-12"
-          ),
-          p(
-            class = "hangingindent",
-            "Millard Sp (2013). EnvStats: An R package for Environmental 
-          Statistics. Springer, New York. ISBN 978-1-4614-8455-4."
-          ),
-          p(
-            class = "hangingindent",
-            "R Core Team (2018). stats: A language and environment for statistical 
-          computing. R Foundation for Statistical Computing, Vienna, Austria."
-          ),
-          p(
-            class = "hangingindent",
-            "Wickham H (2016). ggplot2: Elegant Graphics for 
-          Data Analysis. Springer-Verlag New York. ISBN 978-3-319-24277-4"
-          ),
-          p(
-            class = "hangingindent",
-            "Wickham H (2007). reshape2: Reshaping Data with 
-          the reshape package. Journal of Statistical Software, 21(12), 1-20"
+            "Wickham H (2016). ggplot2: Elegant Graphics for Data Analysis.
+            Springer-Verlag New York. ISBN 978-3-319-24277-4"
           ),
           br(),
           br(),
           br(),
           boastUtils::copyrightInfo()
-          
         )
       )
     )
-   )
   )
+)
 
-
-
-server <- (function(input, output, session) {
- 
-  # set up go button 1
+# Define the server ----
+server <- function(input, output, session) {
+  ## Set up go button 1 ----
   observeEvent(
     eventExpr = input$start, 
     handlerExpr = {
-    updateTabItems(
-      session = session, 
-      inputId = "pages", 
-      selected = "prerequisites")
-  })
+      updateTabItems(
+        session = session, 
+        inputId = "pages", 
+        selected = "prerequisites"
+      )
+    }
+  )
   
-  # set up go button 2
+  ## Set up go button 2 ----
   observeEvent(
     eventExpr = input$start1, 
     handlerExpr = {
       updateTabItems(
         session = session, 
         inputId = "pages", 
-        selected = "qqplots")
-    })
+        selected = "qqplots"
+      )
+    }
+  )
   
-  # Set up Info Button
+  ## Set up Info Button ----
   observeEvent(
     eventExpr = input$info,
     handlerExpr = {
@@ -407,30 +440,49 @@ server <- (function(input, output, session) {
     }
   )
   
-  # create density plot function
-  makeDensityPlot <- function(data, xlims, path = 0) {
-    plot <- ggplot2::ggplot(aes(x = x, y = y), data = data) +
-      geom_path(color = "#0072B2", size = 1.5) +
-      xlim(xlims) +
-      xlab("Value") +
-      ylab("Density") +
-      ggtitle("Population Graph") +
-      theme(
-        axis.text = element_text(size = 18),
-        plot.title = element_text(size = 18, face = "bold"),
-        axis.title = element_text(size = 18),
-        panel.background = element_rect(fill = "white", color = "black")
-      )
-    # For case in symmetric where path is 1 causing "box" shape
-    if (path == 1) {
-      plot <- plot +
-        geom_segment(aes(x = 0, y = 0, xend = 0, yend = 1), color = "#0072B2", size = 1.5) +
-        geom_segment(aes(x = 1, y = 0, xend = 1, yend = 1), color = "#0072B2", size = 1.5)
-    }
-    plot
-  }
+  ## Create example plots for prereq's ----
+  ### Skewed example ----
+  output$skewExamplePlot <- renderPlot({
+    qqPlot(
+      as.vector(scale(skewedData)), 
+      distribution = "norm", 
+      param.list = list(mean = 0, sd = 1), 
+      points.col = boastUtils::boastPalette[5], 
+      line.col = "red", 
+      pch = 16,
+      plot.type = "Q-Q", 
+      qq.line.type = "0-1", 
+      add.line = TRUE, 
+      cex.lab = 1.5, 
+      cex.axis = 1.5, 
+      cex.main = 1.5, 
+      cex.sub = 1.5,
+      main = "Normal Q-Q Plot", 
+      ylab = "Standardized Sample Quantiles"
+    )
+  })
   
-  #list all input value 
+  ### Gaussian example plot ----
+  output$goodExamplePlot <- renderPlot({
+    qqPlot(
+      as.vector(scale(normalData)), 
+      distribution = "norm", 
+      param.list = list(mean = 0, sd = 1), 
+      points.col = boastUtils::boastPalette[5], 
+      line.col = "red", 
+      pch = 16,
+      plot.type = "Q-Q", 
+      qq.line.type = "0-1", 
+      add.line = TRUE, 
+      cex.lab = 1.5, 
+      cex.axis = 1.5, 
+      cex.main = 1.5, 
+      cex.sub = 1.5,
+      main = "Normal Q-Q Plot", 
+      ylab = "Standardized Sample Quantiles")
+  })
+  
+  ## One OE for everything!?!?!?!?! ----
   observeEvent({
     # choose population type
     input$dist
@@ -509,30 +561,7 @@ server <- (function(input, output, session) {
             xlim = c(input$leftskew - 9*sqrt(input$leftskew), 0))
     })
     
-    # matrix for prereq graph not skewed
-    data31 <- reactive(matrix(-rgamma(n = 1*100, 
-                                      0.1, beta = 1), 
-                              nrow = input$leftsize, ncol = input$leftpath))
     
-    # qq plot not skewed in prereq
-    output$plotnorm3 <- renderPlot({
-      matrix <- data31()
-      qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-             distribution = "norm", 
-             param.list = list(mean = 0, sd = 1), 
-             points.col = boastUtils::boastPalette[5], 
-             line.col = "red", 
-             pch = 16,
-             plot.type = "Q-Q", 
-             qq.line.type = "0-1", 
-             add.line = TRUE, 
-             cex.lab = 1.5, 
-             cex.axis = 1.5, 
-             cex.main = 1.5, 
-             cex.sub = 1.5,
-             main = "Normal Q-Q Plot", 
-             ylab = "Standardized Sample Quantiles")
-    })
     
     #qqplot for leftskewed
     output$plotleft2 <- renderPlot({
@@ -586,7 +615,8 @@ server <- (function(input, output, session) {
                cex.sub = 1.5, 
                qq.line.type = "0-1",
                main = "Normal Q-Q Plot", 
-               ylab = "Standardized Sample Quantiles")
+               ylab = "Standardized Sample Quantiles"
+        )
       }
       else if (input$leftpath == 3) {
         qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
@@ -1112,30 +1142,10 @@ server <- (function(input, output, session) {
     data5 <- reactive(matrix
                       (rnorm
                         (n = input$normpath*input$normsize, 
-                                   input$normmean, 
-                                   input$normsd), 
-                             nrow = input$normsize, 
-                             ncol = input$normpath))
-    
-    #qqplot skewed in prereq
-    output$plotleft3 <- renderPlot({
-      matrix <- data5()
-      qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-             distribution = "norm", 
-             param.list = list(mean = 0, sd = 1), 
-             points.col = boastUtils::boastPalette[5], 
-             line.col = "red", 
-             pch = 16,
-             plot.type = "Q-Q", 
-             qq.line.type = "0-1", 
-             add.line = TRUE, 
-             cex.lab = 1.5, 
-             cex.axis = 1.5, 
-             cex.main = 1.5, 
-             cex.sub = 1.5,
-             main = "Normal Q-Q Plot", 
-             ylab = "Standardized Sample Quantiles")
-    })
+                          input$normmean, 
+                          input$normsd), 
+                        nrow = input$normsize, 
+                        ncol = input$normpath))
     
     #qqplot for normal
     output$plotnormal2 <- renderPlot({
@@ -1246,6 +1256,6 @@ server <- (function(input, output, session) {
   }
   
   )
-})
+}
 
 boastUtils::boastApp(ui = ui, server = server)
