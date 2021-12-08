@@ -43,10 +43,10 @@ ui <- list(
     skin = "black",
     ## Header ----
     dashboardHeader(
-      title = "QQ Plots",
+      title = "Q-Q Plots",
       titleWidth = 250,
       tags$li(class = "dropdown", actionLink("info", icon("info"))),
-      tags$li(class = "dropdown", 
+      tags$li(class = "dropdown",
               boastUtils::surveyLink(name = "QQ_plot")),
       tags$li(class = "dropdown",
               tags$a(href = 'https://shinyapps.science.psu.edu/', icon("home"))
@@ -76,31 +76,31 @@ ui <- list(
           tabName = "intro",
           h1("Quantile-Quantile Plots"),
           p("This application is designed to examine Q-Q (Quantile-Quantile)
-            plots. The Q-Q plot, or quantile-quantile plot, is a graphical tool 
-            to help us assess if a set of data plausibly came from some 
+            plots. The Q-Q plot, or quantile-quantile plot, is a graphical tool
+            to help us assess if a set of data plausibly came from some
             theoretical distribution such as a normal (Gaussian) distribution."),
           br(),
           h2("Instructions"),
           tags$ul(
-            tags$li("There are five types of population types you can choose: left-skewed, right-skewed, 
+            tags$li("There are five types of population types you can choose: left-skewed, right-skewed,
                   symmetric, bimodel, and normal (Gaussian)."),
             tags$li("For each type of population, you can change the values of
                     corresponding parameters to change the population density as
                     shown in the population graph."),
             tags$li("A quantile-quantile (Q-Q) plot for a random sample from the
                     population is shown to the lower right, showing how the sample
-                    compares to a particular theoretical normal (Gaussian) 
+                    compares to a particular theoretical normal (Gaussian)
                     distribution."),
-            tags$li("Move the slider to explore how sample size affects the normal 
+            tags$li("Move the slider to explore how sample size affects the normal
                     Q-Q plot and see how this varies from sample to sample using
                     the number of paths slider.")
           ),
           div(
             style = "text-align: center;" ,
             bsButton(
-              inputId = "start", 
-              label = "Prerequisites", 
-              size = "large", 
+              inputId = "start",
+              label = "Prerequisites",
+              size = "large",
               icon = icon("book"),
               style = "default"
             )
@@ -124,25 +124,25 @@ ui <- list(
           tabName = "prerequisites",
           withMathJax(),
           h2("Prerequisites"),
-          p("In order to fully understand this app and the purpose of a 
+          p("In order to fully understand this app and the purpose of a
             Quantile-Quantile (Q-Q) plot, review this information before heading
             to the explore page."),
           tags$ul(
-            tags$li("A Quantile-Quantile Plot (Q-Q plot) displays the quantiles 
+            tags$li("A Quantile-Quantile Plot (Q-Q plot) displays the quantiles
                     of one distribution against the quantiles of another."),
             tags$li("Typically, we use the empirical quantiles from a data sample
-                    (often standardized) on one axis (here we've used the 
+                    (often standardized) on one axis (here we've used the
                     vertical axis). For the other axis, we use the theoretical
-                    quantiles from particular named distribution such as the 
+                    quantiles from particular named distribution such as the
                     Standard Normal"),
             tags$li("The Q-Q plot is commonly used in regression (and modeling)
                     diagnostics to check if the residuals follow a normal (Gaussian)
                     distribution, which is a common assumption for inference."),
-            tags$li("Many times a diagnonal line going from the lower left to 
+            tags$li("Many times a diagnonal line going from the lower left to
                     the upper right appears in the Q-Q plot. This reference line
                     indicates perfect matching between the quantiles of the two
                     distributions."),
-            tags$li("If the points on the plot are close to a diagonal line, 
+            tags$li("If the points on the plot are close to a diagonal line,
                     there is no evidence that the assumption is violated. As more
                     and more points depart from this line, the more we can doubt
                     that the two distributions are consistent with each other.")
@@ -151,28 +151,28 @@ ui <- list(
           p("Looking at the two plots below, the plot on the left would not
               satisfy the regression assumption as many points are deviating from
               the referenc line. In the right plot, the quantiles of the sample
-              values do roughly line up with the quantiles of the normal 
+              values do roughly line up with the quantiles of the normal
               distribution, so there is no apparent violation of the normality
               assumption."
           ),
           fluidRow(
             column(
               width = 6,
-              offset = 0, 
+              offset = 0,
               plotOutput("skewExamplePlot")
             ),
             column(
               width = 6,
-              offeset = 0, 
+              offeset = 0,
               plotOutput("goodExamplePlot")
               )
           ),
           div(
             style = "text-align: center;" ,
             bsButton(
-              inputId = "start1", 
-              label = "Explore!", 
-              size = "large", 
+              inputId = "start1",
+              label = "Explore!",
+              size = "large",
               icon = icon("bolt"),
               style = "default"
             )
@@ -182,7 +182,7 @@ ui <- list(
         tabItem(
           tabName = "qqplots",
           h2("Explore Q-Q Plots"),
-          p("Use the controls on the left to explore Q-Q plots for different 
+          p("Use the controls on the left to explore Q-Q plots for different
             types of populations and different sample sizes."),
           fluidRow(
             column(
@@ -192,13 +192,13 @@ ui <- list(
                 selectInput(
                   inputId = "dist",
                   label = "Population type",
-                  choices = list( 
+                  choices = list(
                     "Left-skewed" = "leftskewed",
                     "Right-skewed" = "rightskewed",
                     "Symmetric" = "symmetric",
                     "Bimodal" = "bimodal",
                     "Normal" = "normal"
-                  ), 
+                  ),
                   selected = "leftskewed"
                 ),
                 checkboxInput(
@@ -216,7 +216,7 @@ ui <- list(
                   condition = "input.dist=='rightskewed'",
                   sliderInput("rightskew", "Skewness:",min = 0, max = 1, value = .5, step = 0.01,
                               ticks = F)
-                ), 
+                ),
                 conditionalPanel(
                   condition = "input.dist=='symmetric'",
                   sliderInput("inverse","Peakedness:", min = 0, max = 1, value = .5, step = 0.01,
@@ -224,18 +224,18 @@ ui <- list(
                 ),
                 conditionalPanel(
                   condition = "input.dist=='bimodal'",
-                  sliderInput("prop","Percent under right mode:",min = 10, 
+                  sliderInput("prop","Percent under right mode:",min = 10,
                               max = 90, value = 50, ticks = F, post = "%")
                 ),
                 conditionalPanel(
                   condition = "input.dist == 'normal'",
                   sliderInput("normmean", "Mean:", min = -5, max = 5, value = 0, step = 0.1,
                               ticks = F),
-                  sliderInput("normsd", "Standard Deviation:", min = 1, max = 5, value = 1, step = 0.1, 
+                  sliderInput("normsd", "Standard Deviation:", min = 1, max = 5, value = 1, step = 0.1,
                               ticks = F)
                 ),
                 conditionalPanel(
-                  condition = "input.dist == 'leftskewed'", 
+                  condition = "input.dist == 'leftskewed'",
                   sliderInput("leftpath", "Number of paths",
                               min = 1,
                               max = 3,
@@ -246,7 +246,7 @@ ui <- list(
                               value = 100)
                 ),
                 conditionalPanel(
-                  condition = "input.dist == 'rightskewed'", 
+                  condition = "input.dist == 'rightskewed'",
                   # choose the number of sample means
                   sliderInput("rightpath", "Number of paths",
                               min = 1,
@@ -258,7 +258,7 @@ ui <- list(
                               max = 500,
                               value = 100)
                 ),
-                
+
                 conditionalPanel(
                   condition = "input.dist == 'symmetric'",
                   #choose the number of sample means
@@ -321,10 +321,10 @@ ui <- list(
                 plotOutput('plotnormal1')),
               #### QQ Plots ----
               conditionalPanel(
-                condition = "input.dist == 'leftskewed'", 
+                condition = "input.dist == 'leftskewed'",
                 plotOutput('plotleft2')),
               conditionalPanel(
-                condition = "input.dist == 'rightskewed'", 
+                condition = "input.dist == 'rightskewed'",
                 plotOutput('plotright2')),
               conditionalPanel(
                 condition = "input.dist == 'symmetric'",
@@ -351,19 +351,19 @@ ui <- list(
           ),
           p(
             class = "hangingindent",
-            "Boos, D. D., and Nychka, D. (2012). Rlab: Functions and datasets 
+            "Boos, D. D., and Nychka, D. (2012). Rlab: Functions and datasets
             required for ST370 class. (v. 2.15.1) [R package]. Available from
             https://CRAN.R-project.org/package=Rlab"
           ),
           p(
             class = "hangingindent",
             "Carey, R. and Hatfield, N. (2021), boastUtils: BOAST Utilities.
-            (v. 0.1.11.1), [R package]. Available from 
+            (v. 0.1.11.1), [R package]. Available from
             https://github.com/EducationShinyAppTeam/boastUtils"
           ),
           p(
             class = "hangingindent",
-            "Chang, W. and Borges Ribeiro, B. (2021). shinydashboard: Create 
+            "Chang, W. and Borges Ribeiro, B. (2021). shinydashboard: Create
             dashboards with ‘Shiny’. (v. 0.7.2) [R package]. Available from
             https://CRAN.R-project.org/package=shinydashboard"
           ),
@@ -376,7 +376,7 @@ ui <- list(
           ),
           p(
             class = "hangingindent",
-            "Millard, S. P. (2013). EnvStats: An R package for environmental 
+            "Millard, S. P. (2013). EnvStats: An R package for environmental
             statistics. Springer, New York. ISBN 978-1-4614-8455-4."
           ),
           p(
@@ -404,28 +404,28 @@ ui <- list(
 server <- function(input, output, session) {
   ## Set up go button 1 ----
   observeEvent(
-    eventExpr = input$start, 
+    eventExpr = input$start,
     handlerExpr = {
       updateTabItems(
-        session = session, 
-        inputId = "pages", 
+        session = session,
+        inputId = "pages",
         selected = "prerequisites"
       )
     }
   )
-  
+
   ## Set up go button 2 ----
   observeEvent(
-    eventExpr = input$start1, 
+    eventExpr = input$start1,
     handlerExpr = {
       updateTabItems(
-        session = session, 
-        inputId = "pages", 
+        session = session,
+        inputId = "pages",
         selected = "qqplots"
       )
     }
   )
-  
+
   ## Set up Info Button ----
   observeEvent(
     eventExpr = input$info,
@@ -434,79 +434,79 @@ server <- function(input, output, session) {
         session = session,
         type = "info",
         title = "Information",
-        text = "This app will help you become more familiar with 
+        text = "This app will help you become more familiar with
         Quanitile-Quantile plots, as well as its uses and applications."
       )
     }
   )
-  
+
   ## Create example plots for prereq's ----
   ### Skewed example ----
   output$skewExamplePlot <- renderPlot({
     qqPlot(
-      as.vector(scale(skewedData)), 
-      distribution = "norm", 
-      param.list = list(mean = 0, sd = 1), 
-      points.col = boastUtils::boastPalette[5], 
-      line.col = "red", 
+      as.vector(scale(skewedData)),
+      distribution = "norm",
+      param.list = list(mean = 0, sd = 1),
+      points.col = boastUtils::boastPalette[5],
+      line.col = "red",
       pch = 16,
-      plot.type = "Q-Q", 
-      qq.line.type = "0-1", 
-      add.line = TRUE, 
-      cex.lab = 1.5, 
-      cex.axis = 1.5, 
-      cex.main = 1.5, 
+      plot.type = "Q-Q",
+      qq.line.type = "0-1",
+      add.line = TRUE,
+      cex.lab = 1.5,
+      cex.axis = 1.5,
+      cex.main = 1.5,
       cex.sub = 1.5,
-      main = "Normal Q-Q Plot", 
+      main = "Normal Q-Q Plot",
       ylab = "Standardized Sample Quantiles"
     )
   })
-  
+
   ### Gaussian example plot ----
   output$goodExamplePlot <- renderPlot({
     qqPlot(
-      as.vector(scale(normalData)), 
-      distribution = "norm", 
-      param.list = list(mean = 0, sd = 1), 
-      points.col = boastUtils::boastPalette[5], 
-      line.col = "red", 
+      as.vector(scale(normalData)),
+      distribution = "norm",
+      param.list = list(mean = 0, sd = 1),
+      points.col = boastUtils::boastPalette[5],
+      line.col = "red",
       pch = 16,
-      plot.type = "Q-Q", 
-      qq.line.type = "0-1", 
-      add.line = TRUE, 
-      cex.lab = 1.5, 
-      cex.axis = 1.5, 
-      cex.main = 1.5, 
+      plot.type = "Q-Q",
+      qq.line.type = "0-1",
+      add.line = TRUE,
+      cex.lab = 1.5,
+      cex.axis = 1.5,
+      cex.main = 1.5,
       cex.sub = 1.5,
-      main = "Normal Q-Q Plot", 
+      main = "Normal Q-Q Plot",
       ylab = "Standardized Sample Quantiles")
   })
-  
+
   ## One OE for everything!?!?!?!?! ----
   observeEvent({
     # choose population type
     input$dist
-    
+
     # Left skewed
     input$leftskew
     input$leftpath
     input$leftsize
-    
+
     # Right skewed
     input$rightskew
     input$rightpath
     input$rightsize
-    
+
     # Symmetric
     input$inverse
     input$sympath
     input$symsize
-    
+
     # Bimodal
     input$prop
     input$bipath
     input$bisize
-    
+
     #Normal
     input$normmean
     input$normsd
@@ -518,7 +518,7 @@ server <- function(input, output, session) {
     leftSkew <- reactive({
       11 - 10 * input$leftskew
     })
-    
+
     # Population of left skewed
     output$plotleft0 <- renderCachedPlot(
       {
@@ -526,7 +526,7 @@ server <- function(input, output, session) {
         x <- seq((leftSkew()) - 9 * sqrt((leftSkew())), 0, length = input$symsize)
         y <- dgamma(-x, shape = (leftSkew()), beta = 1)
         data <- data.frame(x = x, y = y)
-        
+
         # Make Density Plot
         makeDensityPlot(data = data, xlims = c((leftSkew()) - 9 * sqrt((leftSkew())), 0))
       },
@@ -534,7 +534,7 @@ server <- function(input, output, session) {
         list(input$leftskew)
       }
     )
-    
+
     # Matrix of rgamma values
     data1 <-
       reactive(matrix(
@@ -549,128 +549,128 @@ server <- function(input, output, session) {
 
     output$plotleft1 <- renderPlot({
       curve(dgamma(-x, shape = input$leftskew, beta = 1),
-            main = "Population Graph", 
-            col = "black", 
+            main = "Population Graph",
+            col = "black",
             xlab = "value",
             ylab = "density",
             lwd = 5,
-            cex.lab = 1.5, 
-            cex.axis = 1.5, 
-            cex.main = 1.5, 
+            cex.lab = 1.5,
+            cex.axis = 1.5,
+            cex.main = 1.5,
             cex.sub = 1.5,
             xlim = c(input$leftskew - 9*sqrt(input$leftskew), 0))
     })
-    
-    
-    
+
+
+
     #qqplot for leftskewed
     output$plotleft2 <- renderPlot({
       matrix <- data1()
       if (input$leftpath == 1) {
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[5], 
-               line.col = "red", 
+        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[5],
+               line.col = "red",
                pch = 16,
-               plot.type = "Q-Q", 
-               qq.line.type = "0-1", 
-               add.line = TRUE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
+               plot.type = "Q-Q",
+               qq.line.type = "0-1",
+               add.line = TRUE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
                cex.sub = 1.5,
-               main = "Normal Q-Q Plot", 
+               main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
       }
       else if (input$leftpath == 2) {
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[5], 
+        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[5],
                line.col = "red",
                pch = 16,
-               plot.type = "Q-Q", 
-               qq.line.type = "0-1", 
-               add.line = TRUE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
+               plot.type = "Q-Q",
+               qq.line.type = "0-1",
+               add.line = TRUE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
                cex.sub = 1.5,
                main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
         par(new = TRUE)
-        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[8], 
+        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[8],
                pch = 16,
-               plot.type = "Q-Q", 
-               yaxt = 'n', 
+               plot.type = "Q-Q",
+               yaxt = 'n',
                xaxt = 'n',
-               add.line = FALSE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
-               cex.sub = 1.5, 
+               add.line = FALSE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
+               cex.sub = 1.5,
                qq.line.type = "0-1",
-               main = "Normal Q-Q Plot", 
+               main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles"
         )
       }
       else if (input$leftpath == 3) {
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[5], 
-               line.col = "red", 
+        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[5],
+               line.col = "red",
                pch = 16,
-               plot.type = "Q-Q", 
-               qq.line.type = "0-1", 
-               add.line = TRUE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
+               plot.type = "Q-Q",
+               qq.line.type = "0-1",
+               add.line = TRUE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
                cex.sub = 1.5,
-               main = "Normal Q-Q Plot", 
+               main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
         par(new = TRUE)
-        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[8], 
+        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[8],
                pch = 16,
-               plot.type = "Q-Q", 
-               yaxt = 'n', 
+               plot.type = "Q-Q",
+               yaxt = 'n',
                xaxt = 'n',
-               add.line = FALSE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
-               cex.sub = 1.5, 
+               add.line = FALSE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
+               cex.sub = 1.5,
                qq.line.type = "0-1",
                main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
         par(new = TRUE)
-        qqPlot((matrix[,3] - mean(matrix[,3]))/sd(matrix[,3]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[2], 
+        qqPlot((matrix[,3] - mean(matrix[,3]))/sd(matrix[,3]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[2],
                pch = 16,
-               plot.type = "Q-Q", 
-               yaxt = 'n', 
-               xaxt = 'n', 
+               plot.type = "Q-Q",
+               yaxt = 'n',
+               xaxt = 'n',
                qq.line.type = "0-1",
-               add.line = FALSE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
+               add.line = FALSE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
                cex.sub = 1.5,
                main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
       }
     })
-    
+
     rightSkew <- reactive({
       11 - 10 * input$rightskew
     })
@@ -681,7 +681,7 @@ server <- function(input, output, session) {
         x <- seq(0, (rightSkew()) + 9 * sqrt(rightSkew()), length = input$symsize)
         y <- dgamma(x, shape = (rightSkew()), beta = 1)
         data <- data.frame(x = x, y = y)
-        
+
         # Make the density plot
         makeDensityPlot(data = data, xlims = c(0, (rightSkew()) + 9 * sqrt((rightSkew()))))
       },
@@ -689,7 +689,7 @@ server <- function(input, output, session) {
         list(input$rightskew)
       }
     )
-    
+
     # Matrix of rgamma values
     data2 <-
       reactive(matrix(
@@ -704,109 +704,109 @@ server <- function(input, output, session) {
     output$plotright2 <- renderPlot({
       matrix <- data2()
       if (input$rightpath == 1) {
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[5], 
+        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[5],
                pch = 16,
-               line.col = "red", 
-               plot.type = "Q-Q", 
-               qq.line.type = "0-1", 
-               add.line = TRUE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
+               line.col = "red",
+               plot.type = "Q-Q",
+               qq.line.type = "0-1",
+               add.line = TRUE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
                cex.sub = 1.5,
-               main = "Normal Q-Q Plot", 
+               main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
       }
       else if (input$rightpath == 2) {
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[5], 
+        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[5],
                pch = 16,
-               line.col = "red", 
-               plot.type = "Q-Q", 
-               qq.line.type = "0-1", 
-               add.line = TRUE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
+               line.col = "red",
+               plot.type = "Q-Q",
+               qq.line.type = "0-1",
+               add.line = TRUE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
                cex.sub = 1.5,
                main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
         par(new = TRUE)
-        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[8], 
+        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[8],
                pch = 16,
-               plot.type = "Q-Q", 
-               yaxt = 'n', 
+               plot.type = "Q-Q",
+               yaxt = 'n',
                xaxt = 'n',
-               add.line = FALSE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
-               cex.sub = 1.5, 
+               add.line = FALSE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
+               cex.sub = 1.5,
                qq.line.type = "0-1",
-               main = "Normal Q-Q Plot", 
+               main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
       }
       else if (input$rightpath == 3) {
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[5], 
-               line.col = "red", 
+        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[5],
+               line.col = "red",
                pch = 16,
-               plot.type = "Q-Q", 
-               qq.line.type = "0-1", 
-               add.line = TRUE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
+               plot.type = "Q-Q",
+               qq.line.type = "0-1",
+               add.line = TRUE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
                cex.sub = 1.5,
                main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
         par(new = TRUE)
-        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[8], 
-               plot.type = "Q-Q", 
+        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[8],
+               plot.type = "Q-Q",
                pch = 16,
-               yaxt = 'n', 
+               yaxt = 'n',
                xaxt = 'n',
-               add.line = FALSE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
-               cex.sub = 1.5, 
+               add.line = FALSE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
+               cex.sub = 1.5,
                qq.line.type = "0-1",
-               main = "Normal Q-Q Plot", 
+               main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
         par(new = TRUE)
-        qqPlot((matrix[,3] - mean(matrix[,3]))/sd(matrix[,3]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[2], 
-               plot.type = "Q-Q", 
+        qqPlot((matrix[,3] - mean(matrix[,3]))/sd(matrix[,3]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[2],
+               plot.type = "Q-Q",
                pch = 16,
-               yaxt = 'n', 
-               xaxt = 'n', 
+               yaxt = 'n',
+               xaxt = 'n',
                qq.line.type = "0-1",
-               add.line = FALSE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
+               add.line = FALSE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
                cex.sub = 1.5,
-               main = "Normal Q-Q Plot", 
+               main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
       }
     })
-    
+
     #Population of symmetric
     inverse <- reactive({
       round(14.6 * input$inverse^3 - 5.7 * input$inverse^2 +
@@ -822,7 +822,7 @@ server <- function(input, output, session) {
                 shape2 = inverse()
           )
         data <- data.frame(x = x, y = dens)
-        
+
         # Make density plot separated by case where the peakedness is exactly 1 (causes a "box" shape)
         makeDensityPlot(data = data, xlims = c(-0.03, 1.03), path = inverse())
       },
@@ -830,7 +830,7 @@ server <- function(input, output, session) {
         list(input$symsize, input$inverse)
       }
     )
-    
+
     # Matrix of rbeta values
     data3 <- reactive(matrix(
       rbeta(
@@ -841,119 +841,119 @@ server <- function(input, output, session) {
       nrow = input$symsize,
       ncol = input$sympath
     ))
-    
+
     # Matrix of rbeta values
-    data3 <- reactive(matrix(rbeta(input$sympath*input$symsize, 
-                             shape1 = input$inverse, shape2 = input$inverse), 
+    data3 <- reactive(matrix(rbeta(input$sympath*input$symsize,
+                             shape1 = input$inverse, shape2 = input$inverse),
                              nrow = input$symsize, ncol = input$sympath))
-    
+
     # qq plot symmetric
     output$plotsymmetric2 <- renderPlot({
       matrix <- data3()
       if (input$sympath == 1) {
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[5], 
-               line.col = "red", 
+        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[5],
+               line.col = "red",
                pch = 16,
-               plot.type = "Q-Q", 
-               qq.line.type = "0-1", 
-               add.line = TRUE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
+               plot.type = "Q-Q",
+               qq.line.type = "0-1",
+               add.line = TRUE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
                cex.sub = 1.5,
-               main = "Normal Q-Q Plot", 
+               main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
       }
       else if (input$sympath == 2) {
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[5], 
-               line.col = "red", 
+        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[5],
+               line.col = "red",
                pch = 16,
-               plot.type = "Q-Q", 
-               qq.line.type = "0-1", 
-               add.line = TRUE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
+               plot.type = "Q-Q",
+               qq.line.type = "0-1",
+               add.line = TRUE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
                cex.main = 1.5,
                cex.sub = 1.5,
                main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
         par(new = TRUE)
-        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
+        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
                points.col = boastUtils::boastPalette[8],
                pch = 16,
-               plot.type = "Q-Q", 
-               yaxt = 'n', 
+               plot.type = "Q-Q",
+               yaxt = 'n',
                xaxt = 'n',
                add.line = FALSE,
                cex.lab = 1.5,
                cex.axis = 1.5,
                cex.main = 1.5,
-               cex.sub = 1.5, 
+               cex.sub = 1.5,
                qq.line.type = "0-1",
                main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
       }
       else if (input$sympath == 3) {
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[5], 
-               line.col = "red", 
+        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[5],
+               line.col = "red",
                pch = 16,
-               plot.type = "Q-Q", 
-               qq.line.type = "0-1", 
-               add.line = TRUE, 
-               cex.lab = 1.5, 
+               plot.type = "Q-Q",
+               qq.line.type = "0-1",
+               add.line = TRUE,
+               cex.lab = 1.5,
                cex.axis = 1.5,
                cex.main = 1.5,
                cex.sub = 1.5,
                main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
         par(new = TRUE)
-        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[8], 
-               plot.type = "Q-Q", 
+        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[8],
+               plot.type = "Q-Q",
                pch = 16,
-               yaxt = 'n', 
+               yaxt = 'n',
                xaxt = 'n',
-               add.line = FALSE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
-               cex.sub = 1.5, 
-               qq.line.type = "0-1",
-               main = "Normal Q-Q Plot", 
-               ylab = "Standardized Sample Quantiles")
-        par(new = TRUE)
-        qqPlot((matrix[,3] - mean(matrix[,3]))/sd(matrix[,3]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[2], 
-               plot.type = "Q-Q", 
-               pch = 16,
-               yaxt = 'n', 
-               xaxt = 'n', 
-               qq.line.type = "0-1",
-               add.line = FALSE, 
-               cex.lab = 1.5, 
+               add.line = FALSE,
+               cex.lab = 1.5,
                cex.axis = 1.5,
                cex.main = 1.5,
                cex.sub = 1.5,
-               main = "Normal Q-Q Plot", 
+               qq.line.type = "0-1",
+               main = "Normal Q-Q Plot",
+               ylab = "Standardized Sample Quantiles")
+        par(new = TRUE)
+        qqPlot((matrix[,3] - mean(matrix[,3]))/sd(matrix[,3]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[2],
+               plot.type = "Q-Q",
+               pch = 16,
+               yaxt = 'n',
+               xaxt = 'n',
+               qq.line.type = "0-1",
+               add.line = FALSE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
+               cex.sub = 1.5,
+               main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
       }
     })
-    
+
     # Population for bimodel
     prop <- reactive({
       input$prop / 100
@@ -968,7 +968,7 @@ server <- function(input, output, session) {
         rightdraw <- dbeta(y, 4, 14) * .2
         data <- data.frame(x = seq(0, 5, t * 5), y = prop() * leftdraw + (1 - prop()) *
                              rightdraw)
-        
+
         # Make the density plot
         makeDensityPlot(data = data, xlims = c(0, 5))
       },
@@ -976,7 +976,7 @@ server <- function(input, output, session) {
         list(input$prop)
       }
     )
-    
+
     # Create data for bimodel
     data4 <-
       reactive({
@@ -988,16 +988,16 @@ server <- function(input, output, session) {
           replace = TRUE,
           prob = c(1 - prop(), prop())
         )
-        
+
         # Number of elements sampled from the right distribution (represented by 1)
         rights <- sum(rand)
         # Number of elements sampled from left distribution (represented by 0)
         lefts <- input$bisize * input$bipath - rights
         leftGammas <- rbeta(lefts, 4, 14) * 5
-        
+
         # rgamma(lefts, 1.25, beta = 1) # Samples left distribution
         rightGammas <- 5 - rbeta(rights, 4, 14) * 5 # Samples right distribution
-        
+
         # Loop to assign values from gamma distributions to rand
         rightIndex <- 1
         leftIndex <- 1
@@ -1011,73 +1011,73 @@ server <- function(input, output, session) {
             rightIndex <- rightIndex + 1
           }
         }
-        
+
         # Turn vector rand into a matrix with proper dimensions
         matrix(rand, nrow = input$bisize, ncol = input$bipath)
       })
-    
-    
+
+
     output$plotbiomodel2 <- renderPlot({
       matrix <- data4()
       if (input$bipath == 1) {
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[5], 
-               line.col = "red", 
-               pch = 16,
-               plot.type = "Q-Q", 
-               qq.line.type = "0-1",
-               add.line = TRUE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5,
-               cex.main = 1.5,
-               cex.sub = 1.5,
-               main = "Normal Q-Q Plot", 
-               ylab = "Standardized Sample Quantiles")
-      }
-      else if (input$bipath == 2) {
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
+        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
                points.col = boastUtils::boastPalette[5],
                line.col = "red",
                pch = 16,
-               plot.type = "Q-Q", 
+               plot.type = "Q-Q",
                qq.line.type = "0-1",
-               add.line = TRUE, 
-               cex.lab = 1.5, 
+               add.line = TRUE,
+               cex.lab = 1.5,
                cex.axis = 1.5,
                cex.main = 1.5,
                cex.sub = 1.5,
-               main = "Normal Q-Q Plot", 
+               main = "Normal Q-Q Plot",
+               ylab = "Standardized Sample Quantiles")
+      }
+      else if (input$bipath == 2) {
+        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[5],
+               line.col = "red",
+               pch = 16,
+               plot.type = "Q-Q",
+               qq.line.type = "0-1",
+               add.line = TRUE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
+               cex.sub = 1.5,
+               main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
         par(new = TRUE)
-        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
+        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
                points.col = boastUtils::boastPalette[8],
-               plot.type = "Q-Q", 
+               plot.type = "Q-Q",
                pch = 16,
-               yaxt = 'n', 
+               yaxt = 'n',
                xaxt = 'n',
-               add.line = FALSE, 
-               cex.lab = 1.5, 
+               add.line = FALSE,
+               cex.lab = 1.5,
                cex.axis = 1.5,
-               cex.main = 1.5, 
-               cex.sub = 1.5, 
+               cex.main = 1.5,
+               cex.sub = 1.5,
                qq.line.type = "0-1",
                main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
       }
       else if (input$bipath == 3) {
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
+        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
                points.col = boastUtils::boastPalette[5],
                line.col = "red",
                pch = 16,
-               plot.type = "Q-Q", 
+               plot.type = "Q-Q",
                qq.line.type = "0-1", add.line = TRUE,
                cex.lab = 1.5,
                cex.axis = 1.5,
@@ -1086,34 +1086,34 @@ server <- function(input, output, session) {
                main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
         par(new = TRUE)
-        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
+        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
                points.col = boastUtils::boastPalette[8],
                plot.type = "Q-Q",
                pch = 16,
-               yaxt = 'n', 
+               yaxt = 'n',
                xaxt = 'n',
                add.line = FALSE,
                cex.lab = 1.5,
                cex.axis = 1.5,
                cex.main = 1.5,
-               cex.sub = 1.5, 
+               cex.sub = 1.5,
                qq.line.type = "0-1",
-               main = "Normal Q-Q Plot", 
+               main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
         par(new = TRUE)
         qqPlot((matrix[,3] - mean(matrix[,3]))/sd(matrix[,3]),
                distribution = "norm",
-               param.list = list(mean = 0, sd = 1), 
+               param.list = list(mean = 0, sd = 1),
                points.col = boastUtils::boastPalette[2],
-               plot.type = "Q-Q", 
+               plot.type = "Q-Q",
                pch = 16,
                yaxt = 'n',
                xaxt = 'n',
                qq.line.type = "0-1",
                add.line = FALSE,
-               cex.lab = 1.5, 
+               cex.lab = 1.5,
                cex.axis = 1.5,
                cex.main = 1.5,
                cex.sub = 1.5,
@@ -1121,95 +1121,62 @@ server <- function(input, output, session) {
                ylab = "Standardized Sample Quantiles")
       }
     })
-    
+
     #Polplation of normal
     output$plotnormal1 <- renderPlot({
-      curve(dnorm(x, mean = input$normmean, 
+      curve(dnorm(x, mean = input$normmean,
                   sd = input$normsd),
-            main = "Population Graph", 
-            col = "black", 
-            xlab = "value", 
+            main = "Population Graph",
+            col = "black",
+            xlab = "value",
             ylab = "density",
             lwd = 5,
-            cex.lab = 1.5, 
+            cex.lab = 1.5,
             cex.axis = 1.5,
             cex.main = 1.5,
             cex.sub = 1.5,
             xlim = c((input$normmean - 4*input$normsd), (input$normmean + 4*input$normsd)))
     })
-    
+
     # Matrix of rnorm values
     data5 <- reactive(matrix
                       (rnorm
-                        (n = input$normpath*input$normsize, 
-                          input$normmean, 
-                          input$normsd), 
-                        nrow = input$normsize, 
+                        (n = input$normpath*input$normsize,
+                          input$normmean,
+                          input$normsd),
+                        nrow = input$normsize,
                         ncol = input$normpath))
-    
+
     #qqplot for normal
     output$plotnormal2 <- renderPlot({
       matrix <- data5()
       if (input$normpath == 1) {
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[5], 
+        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[5],
                line.col = "red",
                pch = 16,
-               plot.type = "Q-Q", 
+               plot.type = "Q-Q",
                qq.line.type = "0-1",
-               add.line = TRUE, 
-               cex.lab = 1.5, 
+               add.line = TRUE,
+               cex.lab = 1.5,
                cex.axis = 1.5,
-               cex.main = 1.5, 
+               cex.main = 1.5,
                cex.sub = 1.5,
                main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
       }
       else if (input$normpath == 2) {
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[5],
-               line.col = "red", 
-               pch = 16,
-               plot.type = "Q-Q", 
-               qq.line.type = "0-1",
-               add.line = TRUE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
-               cex.sub = 1.5,
-               main = "Normal Q-Q Plot", 
-               ylab = "Standardized Sample Quantiles")
-        par(new = TRUE)
-        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[8], 
-               plot.type = "Q-Q", 
-               pch = 16,
-               yaxt = 'n', xaxt = 'n',
-               add.line = FALSE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
-               cex.sub = 1.5, 
-               qq.line.type = "0-1",
-               main = "Normal Q-Q Plot",
-               ylab = "Standardized Sample Quantiles")
-      }
-      else if (input$normpath == 3) {
-        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
+        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
                points.col = boastUtils::boastPalette[5],
                line.col = "red",
                pch = 16,
-               plot.type = "Q-Q", 
+               plot.type = "Q-Q",
                qq.line.type = "0-1",
-               add.line = TRUE, 
+               add.line = TRUE,
                cex.lab = 1.5,
                cex.axis = 1.5,
                cex.main = 1.5,
@@ -1217,44 +1184,77 @@ server <- function(input, output, session) {
                main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
         par(new = TRUE)
-        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
+        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
                points.col = boastUtils::boastPalette[8],
-               plot.type = "Q-Q", 
+               plot.type = "Q-Q",
                pch = 16,
-               yaxt = 'n', 
-               xaxt = 'n',
-               add.line = FALSE, 
-               cex.lab = 1.5, 
+               yaxt = 'n', xaxt = 'n',
+               add.line = FALSE,
+               cex.lab = 1.5,
                cex.axis = 1.5,
                cex.main = 1.5,
-               cex.sub = 1.5, 
+               cex.sub = 1.5,
+               qq.line.type = "0-1",
+               main = "Normal Q-Q Plot",
+               ylab = "Standardized Sample Quantiles")
+      }
+      else if (input$normpath == 3) {
+        qqPlot((matrix[,1] - mean(matrix[,1]))/sd(matrix[,1]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[5],
+               line.col = "red",
+               pch = 16,
+               plot.type = "Q-Q",
+               qq.line.type = "0-1",
+               add.line = TRUE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
+               cex.sub = 1.5,
+               main = "Normal Q-Q Plot",
+               ylab = "Standardized Sample Quantiles")
+        par(new = TRUE)
+        qqPlot((matrix[,2] - mean(matrix[,2]))/sd(matrix[,2]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[8],
+               plot.type = "Q-Q",
+               pch = 16,
+               yaxt = 'n',
+               xaxt = 'n',
+               add.line = FALSE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
+               cex.sub = 1.5,
                qq.line.type = "0-1",
                main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
         par(new = TRUE)
-        qqPlot((matrix[,3] - mean(matrix[,3]))/sd(matrix[,3]), 
-               distribution = "norm", 
-               param.list = list(mean = 0, sd = 1), 
-               points.col = boastUtils::boastPalette[2], 
+        qqPlot((matrix[,3] - mean(matrix[,3]))/sd(matrix[,3]),
+               distribution = "norm",
+               param.list = list(mean = 0, sd = 1),
+               points.col = boastUtils::boastPalette[2],
                pch = 16,
-               plot.type = "Q-Q", 
-               yaxt = 'n', 
+               plot.type = "Q-Q",
+               yaxt = 'n',
                xaxt = 'n',
                qq.line.type = "0-1",
-               add.line = FALSE, 
-               cex.lab = 1.5, 
-               cex.axis = 1.5, 
-               cex.main = 1.5, 
+               add.line = FALSE,
+               cex.lab = 1.5,
+               cex.axis = 1.5,
+               cex.main = 1.5,
                cex.sub = 1.5,
-               main = "Normal Q-Q Plot", 
+               main = "Normal Q-Q Plot",
                ylab = "Standardized Sample Quantiles")
       }
     })
-    
+
   }
-  
+
   )
 }
 
