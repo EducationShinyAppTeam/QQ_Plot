@@ -277,7 +277,8 @@ popPickerUI <- function(namespaceID, discMenu = "default", contMenu = "default")
           tags$ul(
             tags$strong("Terms"),
             tags$li("Kurtosis - The measure of skewness relative to the
-                      standard normal distribution")
+                      standard normal distribution"),
+            tags$li()
           )
         )
       ),
