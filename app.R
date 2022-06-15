@@ -78,10 +78,10 @@ ui <- list(
           ### Overview ----
           tabName = "intro",
           h1("Quantile-Quantile Plots"),
-          p("This application is designed to examine Q-Q (Quantile-Quantile)
-            plots. The Q-Q plot, or quantile-quantile plot, is a graphical tool
-            to help us assess if a set of data plausibly came from some
-            theoretical distribution such as a normal (Gaussian) distribution."),
+          p("This application is designed to help the user explore how a QQ 
+            (Quantile-Quantile) plot can be used as a graphical tool to assess 
+            whether a particular set of observations reasonably follow a particular 
+            distribution such as a Gaussian (''normal'')."),
           br(),
           h2("Instructions"),
           tags$ul(
