@@ -6,7 +6,8 @@ Authors@R: c(
     person(given = "Jiajun", family = "Gao", email = "", role = c("aut", "cre")),
     person(given = "Adam", family = "Poleski", email = "axp5697@psu.edu", role = c("aut")),
     person(given = "Dennis", family = "Pearl", role = c("aut")),
-    person(given = "Neil", family = "Hatfield", role = c("aut"))
+    person(given = "Neil", family = "Hatfield", role = c("aut")),
+    person(given = "Nurul Syafiqah", family = "Hamdi", role = c("ctb"))
   )
 Chapter: Linear Regression
 Description: This app shows the uses of QQ plots, as well as an interactive tool to display how different distributions affect the plots.

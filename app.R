@@ -111,7 +111,7 @@ ui <- list(
           br(),
           h3("Acknowledgements"),
           p("This app was developed and coded by Jiajun Gao and modified by
-            Adam Poleski in 2021.",
+            Adam Poleski and Nurul Syafiqah Hamdi.",
             br(),
             br(),
             "Cite this app as:",
