@@ -302,6 +302,7 @@ popPickerUI <- function(namespaceID, discMenu = "default", contMenu = "default")
 #' @export
 popPickerServer <- function(namespaceID){
   require(triangle)
+  require(ggplot2)
   moduleServer(id = namespaceID, function(input, output, session) {
     ## Ensure at least one and no more than 3 music genres selected
     ## Currently not working, Future development?

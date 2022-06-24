@@ -4,36 +4,12 @@ library(shinydashboard)
 library(shinyBS)
 library(boastUtils)
 library(ggplot2)
-library(Rlab)
 library(EnvStats)
 library(shinyWidgets)
 
 # Define common functions ----
 source("popPicker.R")
 maxPaths <- 3
-
-# create density plot function
-# makeDensityPlot <- function(data, xlims, path = 0) {
-#   plot <- ggplot(aes(x = x, y = y), data = data) +
-#     geom_path(color = "#0072B2", size = 1.5) +
-#     xlim(xlims) +
-#     xlab("Value") +
-#     ylab("Density") +
-#     ggtitle("Population Graph") +
-#     theme(
-#       axis.text = element_text(size = 18),
-#       plot.title = element_text(size = 18, face = "bold"),
-#       axis.title = element_text(size = 18),
-#       panel.background = element_rect(fill = "white", color = "black")
-#     )
-#   # For case in symmetric where path is 1 causing "box" shape
-#   if (path == 1) {
-#     plot <- plot +
-#       geom_segment(aes(x = 0, y = 0, xend = 0, yend = 1), color = "#0072B2", size = 1.5) +
-#       geom_segment(aes(x = 1, y = 0, xend = 1, yend = 1), color = "#0072B2", size = 1.5)
-#   }
-#   return(plot)
-# }
 
 # Create example data sets ----
 skewedData <- -1 * rgamma(n = 75, shape = 0.1, scale = 1)
@@ -119,7 +95,7 @@ ui <- list(
             boastUtils::citeApp(),
             br(),
             br(),
-            div(class = "updated", "Last Update: 12/8/2021 by NJH")
+            div(class = "updated", "Last Update: 6/24/2022 by NJH")
           )
         ),
         ### Prereq page ----
@@ -234,12 +210,6 @@ ui <- list(
           ),
           p(
             class = "hangingindent",
-            "Boos, D. D., and Nychka, D. (2012). Rlab: Functions and datasets
-            required for ST370 class. (v. 2.15.1) [R package]. Available from
-            https://CRAN.R-project.org/package=Rlab"
-          ),
-          p(
-            class = "hangingindent",
             "Carey, R. and Hatfield, N. (2021), boastUtils: BOAST Utilities.
             (v. 0.1.11.1), [R package]. Available from
             https://github.com/EducationShinyAppTeam/boastUtils"
@@ -252,10 +222,10 @@ ui <- list(
           ),
           p(
             class = "hangingindent",
-            "Chang, W., Cheng, J., Allaire, J., Sievert, C., Schloerke, B., Xie, Y.,
-            Allen, J., McPherson, J., Dipert, A., and Borges, B. (2021). shiny:
-            Web application framework for R. (v. 1.7.1) [R package]. Available
-            from https://CRAN.R-project.org/package=shiny"
+            "Chang, W., Cheng, J., Allaire, J., Sievert, C., Schloerke, B., Xie,
+            Y., Allen, J., McPherson, J., Dipert, A., and Borges, B. (2021).
+            shiny: Web application framework for R. (v. 1.7.1) [R package].
+            Available from https://CRAN.R-project.org/package=shiny"
           ),
           p(
             class = "hangingindent",
