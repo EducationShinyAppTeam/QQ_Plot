@@ -72,7 +72,7 @@ ui <- list(
                     distribution."),
             tags$li("Move the slider to explore how sample size affects the normal
                     Q-Q plot and see how this varies from sample to sample using
-                    the number of paths slider.")
+                    the number of samples slider.")
           ),
           div(
             style = "text-align: center;" ,
@@ -175,7 +175,7 @@ ui <- list(
               wellPanel(
                 sliderInput(
                   inputId = "paths",
-                  label = "Number of paths",
+                  label = "Number of samples",
                   min = 1,
                   max = maxPaths,
                   step = 1,
