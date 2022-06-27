@@ -1,0 +1,23 @@
+Title: Quantile-Quantile Plot
+ShortName: Q-Q Plots
+Date: 2021-06-03
+Lifecycle: experimental
+Authors@R: c(
+    person(given = "Jiajun", family = "Gao", email = "", role = c("aut", "cre")),
+    person(given = "Adam", family = "Poleski", email = "axp5697@psu.edu", role = c("aut")),
+    person(given = "Dennis", family = "Pearl", role = c("aut")),
+    person(given = "Neil", family = "Hatfield", role = c("aut")),
+    person(given = "Nurul Syafiqah", family = "Hamdi", role = c("ctb"))
+  )
+Chapter: Linear Regression
+Description: This app shows the uses of QQ plots, as well as an interactive tool to display how different distributions affect the plots.
+LearningObjectives: c(
+    "The student will first learn about the background of QQ Plots and what they are used for.  From there, they will be able to play 
+    around with interactive QQ Plots to see how various things affect them (sample size, skewness, number of paths.)"
+  )
+DisplayMode: Normal
+URL: https://psu-eberly.shinyapps.io/QQ_Plot
+BugReports: https://github.com/EducationShinyAppTeam/QQ_Plot/issues
+License: CC-BY-NC-SA-4.0
+Tags: simulation
+Type: Shiny
