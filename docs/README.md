@@ -3,7 +3,7 @@
 ![experimental](https://img.shields.io/badge/lifecycle-experimental-orange)
 ![year](https://img.shields.io/badge/year-2018-lightgrey)
 
-![App Screenshot](https://sites.psu.edu/shinyapps/files/2018/12/7adcddfe862f983858c19b5f09129128366d9a88-qqplot-25aays8.png)
+![App Screenshot](https://sites.psu.edu/shinyapps/files/2018/12/qqplot.jpg)
 
 # App Description
 
